@@ -18,14 +18,14 @@
 .page-title {
   font-family: var(--font-display);
   font-size: clamp(1.75rem, 1.2rem + 1.5vw, 2.5rem);
-  background: var(--gradient-aurora);
+  background: var(--gradient-brand-radial);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .page-subtitle {
-  color: var(--muted-foreground);
+  color: var(--text-secondary);
   font-size: 0.875rem;
 }
 
@@ -44,7 +44,7 @@
 }
 
 .section-meta {
-  color: var(--muted-foreground);
+  color: var(--text-secondary);
   font-size: 0.75rem;
 }
 
@@ -78,13 +78,13 @@
 }
 
 .empty-state p {
-  color: var(--muted-foreground);
+  color: var(--text-secondary);
   font-size: 0.875rem;
   max-width: 420px;
 }
 
 .inline-link {
-  color: var(--accent);
+  color: var(--brand-light);
   text-decoration: underline;
 }
 
@@ -95,14 +95,14 @@
   gap: 8px;
   padding: 10px 16px;
   border-radius: 0.75rem;
-  background: var(--gradient-primary);
+  background: var(--gradient-brand);
   color: white;
   border: none;
   cursor: pointer;
   font-weight: 600;
   font-size: 0.875rem;
   transition: transform 0.15s ease, box-shadow 0.2s ease;
-  box-shadow: 0 14px 40px -16px var(--gradient-primary);
+  box-shadow: 0 14px 40px -16px var(--gradient-brand);
 }
 .btn-primary:hover:not(:disabled) { transform: translateY(-1px); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -114,15 +114,15 @@
   padding: 10px 14px;
   border-radius: 0.75rem;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--glass-border);
-  color: var(--foreground);
+  border: 1px solid var(--glass-background-background-border);
+  color: var(--text-primary);
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
   transition: background 0.2s;
 }
 .btn-ghost:hover:not(:disabled) { background: rgba(255, 255, 255, 0.1); }
-.btn-ghost.destructive { color: var(--destructive); }
+.btn-ghost.destructive { color: var(--feedback-danger); }
 .btn-ghost.destructive:hover { background: rgba(239, 68, 68, 0.12); }
 .btn-ghost:disabled { opacity: 0.5; cursor: not-allowed; }
 
@@ -134,8 +134,8 @@
   justify-content: center;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--glass-border);
-  color: var(--foreground);
+  border: 1px solid var(--glass-background-background-border);
+  color: var(--text-primary);
   cursor: pointer;
 }
 .icon-btn:hover { background: rgba(255, 255, 255, 0.1); }

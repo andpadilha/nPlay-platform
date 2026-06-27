@@ -15,7 +15,7 @@
 
 .loading-text {
   font-size: 0.875rem;
-  color: var(--muted-foreground);
+  color: var(--text-secondary);
 }
 
 .main-content {

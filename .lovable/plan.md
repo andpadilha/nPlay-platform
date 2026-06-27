@@ -11,7 +11,7 @@ App 100% client-side, sem backend, sem auth, persistência em `localStorage`. Vi
 
 ## 2. Design System (`src/styles/`)
 
-- `tokens.css` — variáveis CSS: `--bg #0f0a1e`, `--primary #8b5cf6`, `--accent #ec4899`, `--highlight #f59e0b`, gradientes aurora (roxo→rosa→âmbar), raios, sombras, blur do glass, durações de animação.
+- `tokens.css` — variáveis CSS: `--background-primary #0f0a1e`, `--brand #8b5cf6`, `--brand-light #ec4899`, `--brand-dark #f59e0b`, gradientes aurora (roxo→rosa→âmbar), raios, sombras, blur do glass, durações de animação.
 - `reset.css` — reset moderno + dark mode nativo.
 - `typography.css` — Outfit (títulos), Figtree (UI).
 - `globals.css` — body, scrollbars, seleção, foco acessível.
