@@ -369,7 +369,7 @@ function PlayerBar(p: any) {
   if (!p.track) return null;
 
   return (
-    <footer className={cn("player-footer", p.isMobileExpanded && "mobile-fullscreen glass")}>
+    <footer className={cn("player-footer glass", p.isMobileExpanded && "mobile-fullscreen glass")}>
       {p.isMobileExpanded && (
         <div className="fullscreen-header">
           <button className="btn-minimize" onClick={() => p.setIsMobileExpanded(false)}>

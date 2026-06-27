@@ -38,7 +38,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="app-container">
-      <header className="mobile-header">
+      <header className="mobile-header glass">
         <div className="mobile-header-spacer" />
         <span className="mobile-brand-title">Norti Play</span>
         <button

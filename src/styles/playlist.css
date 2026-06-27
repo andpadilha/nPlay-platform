@@ -5,8 +5,8 @@
   border-radius: 1.5rem;
   align-items: flex-end;
   background:
-    radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.25), transparent 60%),
-    radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.2), transparent 60%),
+    radial-gradient(at 0% 0%, var(--ring-glow), transparent 60%),
+    radial-gradient(at 100% 100%, var(--ring-glow), transparent 60%),
     var(--glass);
 }
 

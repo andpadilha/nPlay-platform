@@ -58,7 +58,7 @@
 }
 
 .grid-playlists {
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   padding-top: 16px;
 }
 
@@ -102,7 +102,7 @@
   font-weight: 600;
   font-size: 0.875rem;
   transition: transform 0.15s ease, box-shadow 0.2s ease;
-  box-shadow: 0 14px 40px -16px rgba(236, 72, 153, 0.4);
+  box-shadow: 0 14px 40px -16px var(--gradient-primary);
 }
 .btn-primary:hover:not(:disabled) { transform: translateY(-1px); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }

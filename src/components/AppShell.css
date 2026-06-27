@@ -48,6 +48,7 @@
 @media (max-width: 768px) {
   .app-container {
     flex-direction: column;
+    height: 100%;
   }
 
   /* Ativa o topo do aplicativo no celular */
@@ -136,6 +137,6 @@
   }
 
   .main-wrapper {
-    padding: 16px;
+    padding: 0px;
   }
 }
