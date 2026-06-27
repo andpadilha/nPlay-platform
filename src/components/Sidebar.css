@@ -1,0 +1,224 @@
+/* Sidebar.css */
+.sidebar-container {
+  width: 288px;
+  height: 100vh;
+  flex-shrink: 0;
+  padding: 12px;
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Base styles para os cards */
+.brand-card,
+.nav-menu,
+.playlist-panel {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: oklch(1 0 0 / 0.03);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid oklch(1 0 0 / 0.08);
+  border-radius: 1rem;
+}
+
+.brand-card {
+  padding: 20px;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 8px;
+  gap: 4px;
+}
+
+.playlist-panel {
+  max-height: 59.5vh;
+  padding: 16px;
+  flex: 1;
+  gap: 4px;
+}
+
+/* Brand */
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.logo-img {
+  width: 32px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.brand-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+.brand-subtitle {
+  font-size: 0.625rem;
+  color: var(--muted-foreground);
+  margin-top: 2px;
+}
+
+/* Nav */
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 0.75rem;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--muted-foreground);
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--foreground);
+}
+
+.nav-link.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--foreground);
+}
+
+/* Playlists */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+.btn-add {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.form-wrapper {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.input-playlist {
+  flex: 1;
+  padding: 6px 12px;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid oklch(1 0 0 / 0.1);
+  color: white;
+  font-size: 0.875rem;
+}
+
+.btn-create {
+  padding: 6px 8px;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+}
+
+.playlist-list {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow-y: auto;
+  margin: 0 -8px;
+  padding: 0 8px;
+  gap: 4px;
+}
+
+.no-playlist-msg {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  padding: 4px;
+  margin: 0;
+}
+
+.playlist-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  text-decoration: none;
+  color: var(--foreground);
+  transition: all 0.2s;
+}
+
+.playlist-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.playlist-item.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--accent);
+}
+
+.track-count {
+  margin-left: 8px;
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+
+/* No Desktop: exibe a barra lateral normalmente */
+@media (min-width: 768px) {
+  .sidebar-container {
+    display: flex;
+  }
+}
+
+/* No Mobile: garante que ao abrir a gaveta, o conteúdo fique visível */
+@media (max-width: 768px) {
+  .sidebar-container {
+    display: flex;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .playlist-panel {
+    max-height: none;
+  }
+}

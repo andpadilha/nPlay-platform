@@ -1,0 +1,61 @@
+/* AddTrackBar.css */
+.add-track-bar {
+  display: flex;
+  align-items: center;
+  position: sticky;
+  gap: 8px;
+  padding: 8px 8px 8px 20px;
+  background: oklch(1 0 0 / 0.03);
+  backdrop-filter: blur(24px) saturate(160%);
+  border-radius: 1rem;
+}
+
+.input-url {
+  flex: 1;
+  background: transparent;
+  font-size: 0.875rem;
+  border: none;
+  outline: none;
+  color: var(--foreground);
+}
+
+.input-url::placeholder {
+  color: var(--muted-foreground);
+}
+
+.btn-add-track {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 20px 60px -20px oklch(0.60 0.15 45 / 0.20);
+}
+
+.btn-add-track:hover {
+  transform: scale(1.02);
+}
+
+.btn-add-track:active {
+  transform: scale(0.95);
+}
+
+.btn-add-track:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

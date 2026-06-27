@@ -1,0 +1,687 @@
+.engineWrapper {
+    position: fixed;
+    width: 1px;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    opacity: 0.001; /* Fica virtualmente invisível, mas renderiza na tela */
+    pointer-events: none;
+    z-index: -1; /* Fica atrás de absolutamente tudo */
+}
+
+.engineContainer {
+    width: 100%;
+    height: 100%;
+}
+
+/* ==========================================
+   PIP NORMAL (Mantido original)
+========================================== */
+
+.pipContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    min-height: 80px !important;
+
+    background:
+        radial-gradient(at 30% 10%, var(--ring-glow), transparent 70%),
+        radial-gradient(at 85% 90%, var(--ring-glow), transparent 70%),
+        var(--background-deep);
+    padding: 16px;
+    gap: 16px;
+    color: var(--foreground);
+    overflow: hidden;
+    transition: all 0.25s ease;
+
+    container-type: size;
+    container-name: pip-window;
+}
+
+.pipHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pipTitleText {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: .7;
+}
+
+.pipCloseButton {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 999px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--foreground);
+    cursor: pointer;
+}
+
+.pipThumbnail {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: var(--shadow-glow-pink);
+}
+
+.pipTextWrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.pipTrackTitle {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 4px;
+}
+
+.pipTrackAuthor {
+    font-size: 12px;
+    opacity: .65;
+}
+
+.pipProgressContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pipProgressTrack {
+    height: 6px;
+    background: var(--glass);
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+}
+
+.pipProgressBar {
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    border-radius: 999px;
+}
+
+.pipTimeLabel {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    opacity: .7;
+}
+
+.pipControls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: auto;
+}
+
+.pipPlayButton {
+    width: 60px;
+    height: 60px;
+    border-radius: 999px;
+    border: none;
+    background: var(--accent);
+    color: var(--primary-foreground);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-glow-pink);
+}
+
+.pipNavButton {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.pipEmptyState {
+    opacity: .6;
+    font-size: 13px;
+    margin: auto;
+}
+
+/* ==========================================
+   PIP RESPONSIVO (Mantido original)
+========================================== */
+
+@container pip-window (max-width: 240px) or (max-height: 200px) {
+    .pipThumbnail {
+        display: none !important;
+    }
+
+    .pipContainer {
+        justify-content: center;
+        padding: 8px;
+    }
+
+    .pipControls {
+        margin: 0 !important;
+        gap: 16px;
+    }
+
+    .pipPlayButton {
+        width: 42px;
+        height: 42px;
+    }
+
+    .pipNavButton {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+@container pip-window (max-height: 200px) {
+    .pipHeader,
+    .pipThumbnail,
+    .pipTextWrapper {
+        display: none !important;
+    }
+
+    .pipContainer {
+        flex-direction: column-reverse !important;
+        justify-content: center;
+        padding: 8px;
+        gap: 8px !important;
+    }
+
+    .pipControls {
+        margin: 0 !important;
+        gap: 8px;
+    }
+
+    .pipPlayButton {
+        width: 36px;
+        height: 36px;
+    }
+
+    .pipNavButton {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+
+/* ==========================================
+   FOOTER BASE DESKTOP (Mantido original)
+========================================== */
+
+.player-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    padding: 0.75rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.player-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+.track-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    width: 18rem;
+}
+
+.track-thumb {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    object-fit: cover;
+    border: 1px solid oklch(1 0 0 / 0.1);
+}
+
+.track-text {
+    min-width: 0;
+    flex: 1; /* Faz o container ocupar o espaço disponível sem estourar */
+    max-width: 65vw; /* Impede que o texto empurre os botões no mobile */
+}
+
+.track-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%; /* Garante que respeite o limite do pai */
+}
+
+.track-author {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.controls-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.controls-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-play-pause {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s, transform 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-play-pause:disabled {
+    opacity: 0.4;
+}
+
+.progress-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.625rem;
+    color: var(--muted-foreground);
+}
+
+.progress-track {
+    flex: 1;
+    height: 0.375rem;
+    background: oklch(1 0 0 / 0.1);
+    border-radius: 9999px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    width: var(--progress-pct);
+}
+
+.controls-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 18rem;
+    justify-content: flex-end;
+}
+
+.btn-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: oklch(0.92 0.005 275 / 0.8);
+    transition: all 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-icon:hover {
+    color: var(--foreground);
+    background: oklch(1 0 0 / 0.1);
+}
+
+.btn-icon.active {
+    color: var(--accent);
+}
+
+.volume-slider {
+    width: 6rem;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+/* QUEUE */
+.queue-drawer {
+    position: fixed;
+    bottom: 7rem;
+    right: 0.75rem;
+    width: 24rem;
+    max-height: 60vh;
+    border-radius: 20px;
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.queue-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid oklch(1 0 0 / 0.1);
+}
+
+.queue-title { font-family: var(--font-display); font-weight: 600; }
+.queue-close-btn { font-size: 0.75rem; color: var(--muted-foreground); background: none; border: none; cursor: pointer; }
+.queue-scroll-area { overflow-y: auto; padding: 0.5rem; }
+
+.queue-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    transition: background 0.2s;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+}
+.queue-item:hover { background: oklch(1 0 0 / 0.05); }
+.queue-item.active { background: oklch(1 0 0 / 0.1); }
+
+.queue-thumb { width: 2.5rem; height: 2.5rem; border-radius: 0.375rem; object-fit: cover; }
+.queue-info { min-width: 0; flex: 1; }
+.queue-item-title { font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.queue-item-title.active { color: var(--accent); font-weight: 500; }
+
+
+/* ==========================================
+   AJUSTE MOBILE (Z-INDEX E TELA CHEIA)
+========================================== */
+@media (max-width: 768px) {
+    .queue-drawer {
+        /* Transforma em um modal/overlay elegante cobrindo o player fullscreen */
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100vw;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0; /* Remove bordas arredondadas nos cantos da tela */
+        z-index: 250; /* Fica acima dos 200 do player fullscreen */
+        
+        /* Backdrop blur mantendo o padrão glass da sua aplicação */
+        background: rgba(10, 6, 18, 0.82) !important;
+        backdrop-filter: blur(24px) !important;
+        -webkit-backdrop-filter: blur(24px) !important;
+        padding: 1.5rem 1rem;
+    }
+
+    .queue-header {
+        padding: 1rem 0.5rem;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid oklch(1 0 0 / 0.1);
+    }
+
+    .queue-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    /* Botão fechar mais "clicável" estilo badge no mobile */
+    .queue-close-btn {
+        font-size: 0.875rem;
+        color: var(--foreground);
+        background: oklch(1 0 0 / 0.1);
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        font-weight: 500;
+        transition: background 0.2s;
+    }
+
+    .queue-scroll-area {
+        flex: 1;
+        padding: 0 0.25rem;
+        /* Scroll suave e seguro no iOS/Android */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch; 
+    }
+
+    .queue-item {
+        padding: 0.75rem 0.5rem;
+        border-radius: 0.5rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .queue-item-title {
+        font-size: 0.95rem; /* Leitura melhorada no mobile */
+    }
+}
+
+/* ==========================================
+   ADAPTAÇÃO REFRESH DO MOBILE (ESTILO SPOTIFY)
+========================================== */
+@media (max-width: 768px) {
+    .player-footer {
+        padding: 0.5rem;
+    }
+
+    .player-bar-container {
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .track-info {
+        flex: 1;
+        width: auto;
+    }
+
+    .hide-on-mini {
+        display: none !important;
+    }
+
+    .controls-center {
+        flex: initial;
+    }
+
+    /* Filete discreto de progresso acima do mini player */
+    .controls-center .progress-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0.75rem;
+        right: 0.75rem;
+        width: calc(100% - 1.5rem);
+    }
+
+    .controls-center .progress-wrapper .time-indicator {
+        display: none !important;
+    }
+
+    .controls-center .progress-track {
+        height: 2px;
+    }
+
+    .controls-right {
+        display: none !important;
+    }
+
+    /* FULLSCREEN PLAYER ATIVADO (TELA CHEIA) */
+    .player-footer.mobile-fullscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 100vh;
+        width: 100vw;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        z-index: 200;
+    }
+
+    .fullscreen-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        color: var(--foreground);
+        margin-top: 0.5rem;
+    }
+
+    .fullscreen-header-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--muted-foreground);
+    }
+
+    .btn-minimize {
+        background: none;
+        border: none;
+        color: var(--foreground);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .player-bar-container.expanded-layout {
+        flex-direction: column;
+        background: none !important;
+        border: none !important;
+        backdrop-filter: none !important;
+        box-shadow: none !important;
+        padding: 0;
+        margin: auto 0;
+        width: 100%;
+        height: auto;
+        justify-content: center;
+        gap: 2rem;
+    }
+
+    /* Capa expandida centralizada */
+    .player-bar-container.expanded-layout .track-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        max-width: none;
+        gap: 1.5rem;
+    }
+
+    .player-bar-container.expanded-layout .track-thumb {
+        width: 82vw;
+        height: 82vw;
+        max-width: 380px;
+        max-height: 380px;
+        border-radius: 1.25rem;
+        box-shadow: var(--shadow-glow-pink), 0 16px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .player-bar-container.expanded-layout .track-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+    }
+
+    .player-bar-container.expanded-layout .track-author {
+        font-size: 0.95rem;
+        color: var(--muted-foreground);
+    }
+
+    /* Controles inferioires */
+    .player-bar-container.expanded-layout .controls-center {
+        width: 100%;
+        max-width: none;
+        gap: 1.25rem;
+    }
+
+    .player-bar-container.expanded-layout .progress-wrapper {
+        position: relative;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        display: flex;
+    }
+
+    .player-bar-container.expanded-layout .progress-wrapper .time-indicator {
+        display: inline-block !important;
+    }
+
+    .player-bar-container.expanded-layout .progress-track {
+        height: 0.375rem;
+    }
+
+    .player-bar-container.expanded-layout .controls-buttons {
+        width: 100%;
+        justify-content: space-between;
+        padding: 0 0.5rem;
+    }
+
+    .player-bar-container.expanded-layout .hide-on-mini {
+        display: flex !important;
+    }
+
+    .player-bar-container.expanded-layout .btn-play-pause {
+        width: 3.75rem;
+        height: 3.75rem;
+    }
+
+    /* Volume Vertical e Utilitários */
+    .player-bar-container.expanded-layout .controls-right {
+        display: flex !important;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.5rem;
+        border-top: 1px solid oklch(1 0 0 / 0.05);
+        padding-top: 1.25rem;
+        width: 100%;
+    }
+
+    .hide-on-mobile-fs {
+        display: none !important;
+    }
+
+    .player-bar-container.expanded-layout .volume-container-box {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+}

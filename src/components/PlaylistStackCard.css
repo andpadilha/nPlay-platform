@@ -1,0 +1,138 @@
+/* PlaylistStackCard.css */
+.playlist-stack-card {
+    display: block;
+    cursor: pointer;
+}
+
+.stack-container {
+    position: relative;
+}
+
+/* Camadas de fundo */
+.stack-layer-back {
+    position: absolute;
+    inset: 0 16px;
+    top: -16px;
+    height: 40px;
+    border-radius: 1.4rem;
+    background: oklch(1 0 0 / 0.03);
+    backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid oklch(1 0 0 / 0.08);
+    opacity: 0.5;
+}
+
+.stack-layer-mid {
+    position: absolute;
+    inset: 0 8px;
+    top: -8px;
+    height: 40px;
+    border-radius: 1.4rem;
+    background: oklch(1 0 0 / 0.03);
+    backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid oklch(1 0 0 / 0.08);
+    opacity: 0.8;
+}
+
+/* Card Principal */
+.stack-main {
+    position: relative;
+    background: oklch(1 0 0 / 0.03);
+    backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid oklch(1 0 0 / 0.08);
+    border-radius: 1.4rem;
+    padding: 12px;
+    transition: all 0.2s ease;
+}
+
+.playlist-stack-card:hover .stack-main {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px -20px oklch(0.60 0.15 45 / 0.20);
+}
+
+.relative-wrapper {
+    position: relative;
+}
+
+.cover-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 0.75rem;
+}
+
+.placeholder-cover {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    opacity: 0.4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badge-count {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 2px 8px;
+    font-size: 0.625rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    color: white;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.play-button {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 20px 60px -20px oklch(0.60 0.15 45 / 0.20);
+}
+
+.playlist-stack-card:hover .play-button {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.play-icon-offset {
+    margin-left: 2px;
+}
+
+.card-info-wrapper {
+    margin-top: 12px;
+}
+
+.card-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.card-meta {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

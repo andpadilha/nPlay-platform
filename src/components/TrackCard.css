@@ -1,0 +1,256 @@
+/* TrackCard.css */
+
+.track-card {
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    backdrop-filter: blur(24px) saturate(160%);
+    background: oklch(100% 0 0 / .03);
+    border: 1px solid oklch(100% 0 0 / .08);
+    border-radius: 1.4rem;
+    padding: 12px;
+    transition: all .2s;
+    position: relative;
+}
+
+.track-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 50px -20px oklch(0.60 0.15 45 / 0.2);
+  cursor: pointer;
+}
+
+.track-card.active {
+  box-shadow: 0 0 0 1px oklch(0.72 0.18 48 / 0.6);
+}
+
+.track-card.menu-open {
+  z-index: 50;
+}
+
+/* THUMBNAIL */
+
+.thumbnail-wrapper {
+  position: relative;
+}
+
+.track-thumbnail {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 0.7rem;
+  display: block;
+}
+
+/* PLAY BUTTON */
+
+.play-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 12px 35px -15px oklch(0.60 0.15 45 / 0.35);
+  opacity: 1;
+  transform: none;
+}
+
+/* hover apenas desktop */
+@media (hover: hover) {
+  .play-btn {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: all .2s;
+  }
+
+  .track-card:hover .play-btn {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* BADGE */
+
+.status-badge {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  padding: 3px 7px;
+  font-size: 0.6rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  font-weight: 600;
+}
+
+/* INFO */
+
+.track-info-container {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.track-text-wrapper {
+  min-width: 0;
+  flex: 1;
+}
+
+.track-title {
+  font-size: 0.8rem;
+  line-height: 1.2;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track-author {
+  margin-top: 3px;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  color: var(--muted-foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* MENU */
+
+.menu-trigger-wrapper {
+  position: relative;
+}
+
+.menu-btn {
+  opacity: 1;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted-foreground);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .menu-btn {
+    opacity: 0;
+    transition: .2s;
+  }
+
+  .track-card:hover .menu-btn {
+    opacity: 1;
+  }
+}
+
+.menu-btn:hover {
+  color: var(--foreground);
+}
+
+/* MENU DROPDOWN */
+
+.playlist-menu {
+  position: absolute;
+  right: 0;
+  top: 32px;
+  z-index: 20;
+  width: 210px;
+  max-width: calc(100vw - 24px);
+  background: var(--background-card);
+  backdrop-filter: blur(24px);
+  border: 1px solid oklch(1 0 0 / 0.08);
+  border-radius: .75rem;
+  padding: 5px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, .5);
+}
+
+/* MOBILE */
+
+@media (max-width: 480px) {
+
+  .play-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .track-title {
+    font-size: .75rem;
+  }
+
+  .track-author {
+    font-size: .65rem;
+  }
+
+  .playlist-menu {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    top: auto;
+    width: auto;
+    border-radius: 1rem;
+  }
+}
+
+/* MENU ITEMS */
+
+.menu-header {
+  font-size: .6rem;
+  text-transform: uppercase;
+  padding: 7px 10px;
+  color: var(--muted-foreground);
+}
+
+.menu-empty {
+  font-size: .7rem;
+  padding: 0 10px 8px;
+  color: var(--muted-foreground);
+}
+
+.menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 10px;
+  font-size: .8rem;
+  border-radius: .5rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--foreground);
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, .1);
+}
+
+.menu-item.destructive {
+  color: var(--destructive);
+}
+
+.menu-item.destructive:hover {
+  background: oklch(67.631% 0.21154 24.793 / .2);
+}
+
+.menu-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, .1);
+  margin: 4px 0;
+}
+
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+}
