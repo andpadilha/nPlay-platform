@@ -19,6 +19,7 @@ import {
 import { useStore, currentTrack } from "@/lib/store";
 import { formatTime } from "@/lib/youtube";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 import "./Player.css";
 
 declare global {
@@ -55,8 +56,18 @@ function loadYouTubeAPI(): Promise<void> {
 
 export function Player() {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const rehydrate = async () => {
+      await useStore.persist.rehydrate();
+      setHydrated(true);
+    };
+    void rehydrate();
+  }, []);
+
+  if (!mounted || !hydrated) return null;
   return <PlayerInner />;
 }
 
@@ -75,10 +86,12 @@ function PlayerInner() {
   const queue = useStore((s) => s.queue);
   const currentIndex = useStore((s) => s.currentIndex);
 
+
   const next = useStore((s) => s.next);
   const prev = useStore((s) => s.prev);
   const togglePlay = useStore((s) => s.togglePlay);
   const setIsPlaying = useStore((s) => s.setIsPlaying);
+
   const toggleShuffle = useStore((s) => s.toggleShuffle);
   const cycleRepeat = useStore((s) => s.cycleRepeat);
   const setVolume = useStore((s) => s.setVolume);
@@ -89,6 +102,16 @@ function PlayerInner() {
   const [showQueue, setShowQueue] = useState(false);
   const [pipDoc, setPipDoc] = useState<Document | null>(null);
   const [isMobileExpanded, setIsMobileExpanded] = useState(false);
+  const isMobile = useIsMobile();
+  const currentVideoIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!track) return;
+    setProgress(0);
+    setDuration(0);
+  }, [track?.id]);
+
+
 
   // refs to avoid stale closures inside YT event callbacks
   const repeatRef = useRef(repeat);
@@ -101,7 +124,13 @@ function PlayerInner() {
   }, [next]);
 
   useEffect(() => {
-    if (isMobileExpanded) {
+    if (!isMobile && isMobileExpanded) {
+      setIsMobileExpanded(false);
+    }
+  }, [isMobile, isMobileExpanded]);
+
+  useEffect(() => {
+    if (isMobileExpanded && isMobile) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -109,7 +138,7 @@ function PlayerInner() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isMobileExpanded]);
+  }, [isMobileExpanded, isMobile]);
 
   const requestPip = async () => {
     if (!("documentPictureInPicture" in window) || !window.documentPictureInPicture) return;
@@ -161,6 +190,12 @@ function PlayerInner() {
         events: {
           onReady: () => {
             ready.current = true;
+            try {
+              playerRef.current.setVolume(muted ? 0 : volume);
+              if (track) {
+                playerRef.current.cueVideoById(track.id);
+              }
+            } catch (e) { }
           },
           onStateChange: (e: any) => {
             if (e.data === window.YT.PlayerState.ENDED) {
@@ -199,19 +234,22 @@ function PlayerInner() {
 
   useEffect(() => {
     if (!ready.current || !playerRef.current || !track) return;
-    try {
-      autoPlayRef.current = true;
-      playerRef.current.loadVideoById({ videoId: track.id, startSeconds: 0 });
-      setTimeout(() => {
-        if (autoPlayRef.current) playerRef.current.playVideo();
-      }, 150);
-    } catch {
-      /* noop */
-    }
-  }, [track?.id]);
 
-  useEffect(() => {
-    if (!ready.current || !playerRef.current) return;
+    if (currentVideoIdRef.current !== track.id) {
+      currentVideoIdRef.current = track.id;
+      try {
+        autoPlayRef.current = isPlaying;
+        if (isPlaying) {
+          playerRef.current.loadVideoById({ videoId: track.id, startSeconds: 0 });
+        } else {
+          playerRef.current.cueVideoById({ videoId: track.id, startSeconds: 0 });
+        }
+      } catch {
+        /* noop */
+      }
+      return;
+    }
+
     try {
       if (isPlaying) {
         autoPlayRef.current = true;
@@ -223,7 +261,7 @@ function PlayerInner() {
     } catch {
       /* noop */
     }
-  }, [isPlaying]);
+  }, [track?.id, isPlaying]);
 
   useEffect(() => {
     const t = setInterval(() => {
@@ -289,6 +327,7 @@ function PlayerInner() {
         pipActive={!!pipDoc}
         isMobileExpanded={isMobileExpanded}
         setIsMobileExpanded={setIsMobileExpanded}
+        isMobile={isMobile}
       />
       {showQueue && <QueueDrawer onClose={() => setShowQueue(false)} />}
       {pipDoc &&
@@ -366,11 +405,14 @@ function PipView({ track, isPlaying, progress, duration, onPlay, onNext, onPrev,
 
 function PlayerBar(p: any) {
   const pct = p.duration ? (p.progress / p.duration) * 100 : 0;
-  if (!p.track) return null;
+  const hasTrack = !!p.track;
 
   return (
-    <footer className={cn("player-footer", p.isMobileExpanded && "mobile-fullscreen glass")}>
-      {p.isMobileExpanded && (
+    <footer className={cn(
+      "player-footer",
+      p.isMobileExpanded && p.isMobile && "mobile-fullscreen glass"
+    )}>
+      {p.isMobileExpanded && p.isMobile && (
         <div className="fullscreen-header">
           <button className="btn-minimize" onClick={() => p.setIsMobileExpanded(false)}>
             <ChevronDown size={28} />
@@ -381,72 +423,85 @@ function PlayerBar(p: any) {
       )}
 
       <div
-        className={cn("player-bar-container glass-strong glow-pink", p.isMobileExpanded && "expanded-layout")}
+        className={cn(
+          "player-bar-container glass",
+          p.isMobileExpanded && p.isMobile && "expanded-layout",
+          !hasTrack && "opacity-70"
+        )}
         onClick={() => {
-          if (!p.isMobileExpanded) p.setIsMobileExpanded(true);
+          if (hasTrack && !p.isMobileExpanded && p.isMobile) p.setIsMobileExpanded(true);
         }}
       >
         <div className="track-info">
-          <img src={p.track.thumbnail} alt="" className="track-thumb" />
-          <div className="track-text">
-            <div className="track-title">{p.track.title}</div>
-            <div className="track-author">{p.track.author}</div>
-          </div>
+          {hasTrack ? (
+            <>
+              <img src={p.track.thumbnail} alt="" className="track-thumb" />
+              <div className="track-text">
+                <div className="track-title">{p.track.title}</div>
+                <div className="track-author">{p.track.author}</div>
+              </div>
+            </>
+          ) : (
+            <div className="track-text">
+              <div className="track-title" style={{ opacity: 0.5 }}>Última música</div>
+            </div>
+          )}
         </div>
 
-        <div className="controls-center" onClick={(e) => p.isMobileExpanded && e.stopPropagation()}>
+        <div className="controls-center" style={{ pointerEvents: hasTrack ? "auto" : "none" }}>
           <div className="progress-wrapper">
-            <span className="time-indicator tabular-nums">{formatTime(p.progress)}</span>
-            <ProgressBar value={pct} onSeek={p.onSeek} />
-            <span className="time-indicator tabular-nums">{formatTime(p.duration)}</span>
+            <span className="time-indicator tabular-nums">{hasTrack ? formatTime(p.progress) : "--:--"}</span>
+            <ProgressBar value={hasTrack ? pct : 0} onSeek={p.onSeek} />
+            <span className="time-indicator tabular-nums">{hasTrack ? formatTime(p.duration) : "--:--"}</span>
           </div>
 
           <div className="controls-buttons">
-            <IconBtn onClick={p.onShuffle} active={p.shuffle} className="hide-on-mini">
+            <IconBtn disabled={!hasTrack} onClick={p.onShuffle} active={p.shuffle} className="hide-on-mini">
               <Shuffle size={18} />
             </IconBtn>
-            <IconBtn onClick={p.onPrev} className="hide-on-mini">
+            <IconBtn disabled={!hasTrack} onClick={p.onPrev} className="hide-on-mini">
               <SkipBack size={20} />
             </IconBtn>
+
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                p.onPlay();
-              }}
               className="btn-play-pause"
+              onClick={(e) => { e.stopPropagation(); p.onPlay(); }}
+              disabled={!hasTrack}
             >
               {p.isPlaying ? <Pause size={22} /> : <Play size={22} />}
             </button>
-            <IconBtn onClick={p.onNext}>
+
+            <IconBtn disabled={!hasTrack} onClick={p.onNext}>
               <SkipForward size={20} />
             </IconBtn>
-            <IconBtn onClick={p.onRepeat} active={p.repeat !== "off"} className="hide-on-mini">
+            <IconBtn disabled={!hasTrack} onClick={p.onRepeat} active={p.repeat !== "off"} className="hide-on-mini">
               {p.repeat === "one" ? <Repeat1 size={18} /> : <Repeat size={18} />}
             </IconBtn>
           </div>
         </div>
 
-        <div className="controls-right" onClick={(e) => p.isMobileExpanded && e.stopPropagation()}>
+        <div className="controls-right" style={{ pointerEvents: hasTrack ? "auto" : "none" }}>
           <div className="utility-buttons-wrapper" style={{ display: "flex", gap: 4 }}>
-            <IconBtn onClick={p.onToggleQueue} active={p.showQueue}>
+            <IconBtn disabled={!hasTrack} onClick={p.onToggleQueue} active={p.showQueue}>
               <ListMusic size={18} />
             </IconBtn>
-            <IconBtn onClick={p.onPip} active={p.pipActive} className="hide-on-mobile-fs">
+            <IconBtn disabled={!hasTrack} onClick={p.onPip} active={p.pipActive} className="hide-on-mobile-fs">
               <PictureInPicture2 size={18} />
             </IconBtn>
           </div>
 
           <div className="volume-container-box" style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <IconBtn onClick={p.onMute}>
+            <IconBtn disabled={!hasTrack} onClick={p.onMute}>
               {p.muted || p.volume === 0 ? <VolumeX size={18} /> : <Volume2 size={18} />}
             </IconBtn>
             <input
               type="range"
               min={0}
               max={100}
-              value={p.muted ? 0 : p.volume}
+              value={hasTrack ? (p.muted ? 0 : p.volume) : 0}
               onChange={(e) => p.onVolume(Number(e.target.value))}
               className="volume-slider"
+              disabled={!hasTrack}
             />
           </div>
         </div>
@@ -494,7 +549,7 @@ function QueueDrawer({ onClose }: { onClose: () => void }) {
   const playQueue = useStore((s) => s.playQueue);
 
   return (
-    <div className="queue-drawer glass-strong glow-violet">
+    <div className="queue-drawer glass">
       <div className="queue-header">
         <h3 className="queue-title">Fila de reprodução</h3>
         <button onClick={onClose} className="queue-close-btn">

@@ -49,7 +49,7 @@
   width: 38px;
   height: 38px;
   border-radius: 999px;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-light) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,8 +84,8 @@
   padding: 3px 7px;
   font-size: 0.6rem;
   border-radius: 999px;
-  background: var(--accent);
-  color: var(--accent-foreground);
+  background: var(--brand-light);
+  color: var(--brand-light-foreground);
   font-weight: 600;
 }
 
@@ -117,7 +117,7 @@
   margin-top: 3px;
   font-size: 0.7rem;
   line-height: 1.2;
-  color: var(--muted-foreground);
+  color: var(--text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -136,7 +136,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--muted-foreground);
+  color: var(--text-secondary);
   background: none;
   border: none;
   cursor: pointer;
@@ -154,7 +154,7 @@
 }
 
 .menu-btn:hover {
-  color: var(--foreground);
+  color: var(--text-primary);
 }
 
 /* MENU DROPDOWN */
@@ -208,13 +208,13 @@
   font-size: .6rem;
   text-transform: uppercase;
   padding: 7px 10px;
-  color: var(--muted-foreground);
+  color: var(--text-secondary);
 }
 
 .menu-empty {
   font-size: .7rem;
   padding: 0 10px 8px;
-  color: var(--muted-foreground);
+  color: var(--text-secondary);
 }
 
 .menu-item {
@@ -228,15 +228,30 @@
   border: none;
   background: none;
   cursor: pointer;
-  color: var(--foreground);
+  color: var(--text-primary);
 }
 
 .menu-item:hover {
   background: rgba(255, 255, 255, .1);
 }
 
+.menu-item span {
+  flex: 1;
+  text-align: left;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.menu-item svg {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+} 
+
+
 .menu-item.destructive {
-  color: var(--destructive);
+  color: var(--feedback-danger);
 }
 
 .menu-item.destructive:hover {

@@ -85,24 +85,122 @@ export async function searchYouTube(query: string, apiKey: string): Promise<Sear
   const url = new URL("https://www.googleapis.com/youtube/v3/search");
   url.searchParams.set("part", "snippet");
   url.searchParams.set("type", "video");
-  url.searchParams.set("maxResults", "24");
+
+  url.searchParams.set("maxResults", "30");
+
   url.searchParams.set("q", query);
+
+  url.searchParams.set("videoCategoryId", "10");      // Música
+  url.searchParams.set("videoEmbeddable", "true");    // Pode ser incorporado
+  url.searchParams.set("videoSyndicated", "true");    // Pode tocar fora do YouTube
+  url.searchParams.set("order", "relevance");
+
   url.searchParams.set("key", apiKey);
   const r = await fetch(url.toString());
   if (!r.ok) {
     const err = await r.json().catch(() => null);
     throw new Error(err?.error?.message || "Falha na busca");
   }
-  const j = await r.json();
-  return (j.items || []).map((it: any) => ({
-    id: it.id.videoId,
-    title: it.snippet.title,
-    author: it.snippet.channelTitle,
-    thumbnail:
-      it.snippet.thumbnails?.medium?.url ||
-      it.snippet.thumbnails?.default?.url ||
-      `https://i.ytimg.com/vi/${it.id.videoId}/hqdefault.jpg`,
-  }));
+
+  const j: any = await r.json();
+
+  const negativeWords = [
+    "karaoke",
+    "reaction",
+    "tutorial",
+    "cover",
+    "lesson",
+    "how to",
+    "concert",
+    "performance",
+    "speed up",
+    "sped up",
+    "slowed",
+    "reverb",
+    "8d",
+    "bass boosted",
+  ];
+
+  const scored: {
+    score: number;
+    id: string;
+    title: string;
+    author: string;
+    thumbnail: string;
+  }[] = (j.items ?? [])
+    .filter((it: any) => it?.id?.videoId && it?.snippet)
+    .map((it: any) => {
+      const title = (it.snippet.title ?? "").toLowerCase();
+      const author = (it.snippet.channelTitle ?? "").toLowerCase();
+
+      let score = 0;
+
+      // ===== PRIORIDADE PARA VÍDEOS OFICIAIS =====
+      if (title.includes("official music video")) score += 300;
+      else if (title.includes("official video")) score += 260;
+      else if (title.includes("official audio")) score += 240;
+      else if (title.includes("official")) score += 180;
+      else if (title.includes("audio")) score += 120;
+
+      // ===== CANAIS OFICIAIS =====
+      if (author.includes("vevo")) score += 250;
+      if (author.includes("topic")) score += 180;
+
+      // Gravadoras e canais oficiais
+      if (
+        author.includes("records") ||
+        author.includes("music") ||
+        author.includes("entertainment")
+      ) {
+        score += 40;
+      }
+
+      // Remixes continuam aparecendo
+      if (title.includes("remix")) score += 30;
+
+      // Penalizações
+      negativeWords.forEach((word) => {
+        if (title.includes(word)) score -= 120;
+      });
+
+      // Lives aparecem, mas abaixo das oficiais
+      if (title.includes("live")) score -= 40;
+
+      return {
+        score,
+        id: it.id.videoId,
+        title: it.snippet.title,
+        author: it.snippet.channelTitle,
+        thumbnail:
+          it.snippet.thumbnails?.medium?.url ??
+          it.snippet.thumbnails?.default?.url ??
+          `https://i.ytimg.com/vi/${it.id.videoId}/hqdefault.jpg`,
+      };
+    });
+
+  return scored
+    .sort((a, b) => b.score - a.score)
+    .map((video): SearchResult => ({
+      id: video.id,
+      title: video.title,
+      author: video.author,
+      thumbnail: video.thumbnail,
+    }));
+}
+
+export async function getYouTubeSuggestions(query: string): Promise<string[]> {
+  if (!query) return [];
+  
+  const url = `https://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=${encodeURIComponent(query)}`;
+  
+  try {
+    const r = await fetch(url);
+    if (!r.ok) return [];
+    const data = await r.json();
+    return data[1] as string[];
+  } catch {
+    return [];
+  }
 }
 
 export async function fetchYouTubePlaylist(

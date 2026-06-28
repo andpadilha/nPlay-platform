@@ -28,20 +28,7 @@ export function Sidebar({ onNavigate }: SidebarProps) {
 
   return (
     <aside className="sidebar-container">
-      <div className="brand-card">
-        <div className="brand-wrapper">
-          <div className="logo-box">
-            <span style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: "white", fontSize: 18 }}>
-              ♪
-            </span>
-          </div>
-          <div>
-            <div className="brand-title">Norti Play</div>
-            <div className="brand-subtitle">Sua música, sem limites</div>
-          </div>
-        </div>
-      </div>
-
+      
       <nav className="nav-menu">
         {navItems.map((item) => (
           <Link

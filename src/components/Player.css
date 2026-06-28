@@ -14,6 +14,10 @@
     height: 100%;
 }
 
+.player-footer-idle {
+  background-color: rgba(0, 0, 0, 0.2); 
+}
+
 /* ==========================================
    PIP NORMAL (Mantido original)
 ========================================== */
@@ -25,12 +29,11 @@
     min-height: 80px !important;
 
     background:
-        radial-gradient(at 30% 10%, var(--ring-glow), transparent 70%),
-        radial-gradient(at 85% 90%, var(--ring-glow), transparent 70%),
-        var(--background-deep);
+        radial-gradient(at 30% 10%, var(--focus-ring), transparent 70%),
+        radial-gradient(at 85% 90%, var(--focus-ring), transparent 70%);
     padding: 16px;
     gap: 16px;
-    color: var(--foreground);
+    color: var(--text-primary);
     overflow: hidden;
     transition: all 0.25s ease;
 
@@ -52,15 +55,15 @@
 }
 
 .pipCloseButton {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
+    background: var(--glass-background);
+    border: 1px solid var(--glass-background);
     border-radius: 999px;
     width: 28px;
     height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--foreground);
+    color: var(--text-primary);
     cursor: pointer;
 }
 
@@ -69,7 +72,7 @@
     aspect-ratio: 16 / 9;
     object-fit: cover;
     border-radius: 16px;
-    box-shadow: var(--shadow-glow-pink);
+    box-shadow: var(--shadow-brand-soft);
 }
 
 .pipTextWrapper {
@@ -97,7 +100,7 @@
 
 .pipProgressTrack {
     height: 6px;
-    background: var(--glass);
+    background: var(--glass-background);
     border-radius: 999px;
     position: relative;
     cursor: pointer;
@@ -106,7 +109,7 @@
 .pipProgressBar {
     position: absolute;
     inset: 0;
-    background: var(--accent);
+    background: var(--brand-light);
     border-radius: 999px;
 }
 
@@ -130,22 +133,22 @@
     height: 60px;
     border-radius: 999px;
     border: none;
-    background: var(--accent);
-    color: var(--primary-foreground);
+    background: var(--brand-light);
+    color: var(--brand-foreground);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: var(--shadow-glow-pink);
+    box-shadow: var(--shadow-brand-soft);
 }
 
 .pipNavButton {
     width: 44px;
     height: 44px;
     border-radius: 999px;
-    border: 1px solid var(--glass-border);
-    background: var(--glass);
-    color: var(--foreground);
+    border: 1px solid var(--glass-background);
+    background: var(--glass-background);
+    color: var(--text-primary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -239,6 +242,7 @@
     gap: 1rem;
     padding: 1rem;
     border-radius: 1rem;
+    box-shadow: var(--shadow-brand);
 }
 
 .track-info {
@@ -274,7 +278,7 @@
 
 .track-author {
     font-size: 0.75rem;
-    color: var(--muted-foreground);
+    color: var(--text-secondary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -299,7 +303,7 @@
     width: 2.75rem;
     height: 2.75rem;
     border-radius: 9999px;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-light) 100%);
     color: white;
     display: flex;
     align-items: center;
@@ -319,7 +323,7 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.625rem;
-    color: var(--muted-foreground);
+    color: var(--text-secondary);
 }
 
 .progress-track {
@@ -335,7 +339,7 @@
 .progress-fill {
     height: 100%;
     border-radius: 9999px;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-light) 100%);
     width: var(--progress-pct);
 }
 
@@ -362,17 +366,17 @@
 }
 
 .btn-icon:hover {
-    color: var(--foreground);
+    color: var(--text-primary);
     background: oklch(1 0 0 / 0.1);
 }
 
 .btn-icon.active {
-    color: var(--accent);
+    color: var(--brand-light);
 }
 
 .volume-slider {
     width: 6rem;
-    accent-color: var(--primary);
+    accent-color: var(--brand);
     cursor: pointer;
 }
 
@@ -399,7 +403,7 @@
 }
 
 .queue-title { font-family: var(--font-display); font-weight: 600; }
-.queue-close-btn { font-size: 0.75rem; color: var(--muted-foreground); background: none; border: none; cursor: pointer; }
+.queue-close-btn { font-size: 0.75rem; color: var(--text-secondary); background: none; border: none; cursor: pointer; }
 .queue-scroll-area { overflow-y: auto; padding: 0.5rem; }
 
 .queue-item {
@@ -417,12 +421,15 @@
     color: inherit;
 }
 .queue-item:hover { background: oklch(1 0 0 / 0.05); }
-.queue-item.active { background: oklch(1 0 0 / 0.1); }
+.queue-item.active { 
+    background: oklch(1 0 0 / 0.1); 
+    border: 1px solid var(--brand-light);
+}
 
 .queue-thumb { width: 2.5rem; height: 2.5rem; border-radius: 0.375rem; object-fit: cover; }
 .queue-info { min-width: 0; flex: 1; }
 .queue-item-title { font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.queue-item-title.active { color: var(--accent); font-weight: 500; }
+.queue-item-title.active { color: var(--brand-light); font-weight: 500; }
 
 
 /* ==========================================
@@ -443,7 +450,7 @@
         z-index: 250; /* Fica acima dos 200 do player fullscreen */
         
         /* Backdrop blur mantendo o padrão glass da sua aplicação */
-        background: rgba(10, 6, 18, 0.82) !important;
+        background: var(--background-secondary) !important;
         backdrop-filter: blur(24px) !important;
         -webkit-backdrop-filter: blur(24px) !important;
         padding: 1.5rem 1rem;
@@ -463,7 +470,7 @@
     /* Botão fechar mais "clicável" estilo badge no mobile */
     .queue-close-btn {
         font-size: 0.875rem;
-        color: var(--foreground);
+        color: var(--text-primary);
         background: oklch(1 0 0 / 0.1);
         padding: 0.5rem 1rem;
         border-radius: 999px;
@@ -550,6 +557,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        background: var(--background-secondary-60) !important;
         z-index: 200;
     }
 
@@ -558,7 +566,7 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        color: var(--foreground);
+        color: var(--text-primary);
         margin-top: 0.5rem;
     }
 
@@ -567,13 +575,13 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.15em;
-        color: var(--muted-foreground);
+        color: var(--text-secondary);
     }
 
     .btn-minimize {
         background: none;
         border: none;
-        color: var(--foreground);
+        color: var(--text-primary);
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -609,7 +617,7 @@
         max-width: 380px;
         max-height: 380px;
         border-radius: 1.25rem;
-        box-shadow: var(--shadow-glow-pink), 0 16px 32px rgba(0, 0, 0, 0.5);
+        box-shadow: var(--shadow-brand-soft), 0 16px 32px rgba(0, 0, 0, 0.5);
     }
 
     .player-bar-container.expanded-layout .track-title {
@@ -619,7 +627,7 @@
 
     .player-bar-container.expanded-layout .track-author {
         font-size: 0.95rem;
-        color: var(--muted-foreground);
+        color: var(--text-secondary);
     }
 
     /* Controles inferioires */

@@ -1,8 +1,223 @@
 /* AppShell.css */
 .app-container {
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   display: flex;
+  flex-direction: column;
+}
+
+.app-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 220px;
+}
+
+.logo-slot {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-light) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-logo {
+  width: auto;
+  height: 26px;
+  object-fit: cover;
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.brand-subtitle {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.app-search-shell {
+  position: relative;
+  flex: 1;
+  max-width: 640px;
+}
+
+.app-search-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 0 14px;
+  height: 48px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.app-search-icon {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.app-search-input {
+  flex: 1;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.app-search-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.app-search-spinner {
+  color: var(--brand-light);
+  animation: spin 1s linear infinite;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 100;
+  border-radius: 16px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--background-drop);
+  box-shadow: 0 20px 50px var(--shadow-brand-soft);
+  border: 1px solid var(--border-glass);
+  height: 400px;
+  overflow: auto;
+}
+
+.search-dropdown-empty {
+  padding: 12px;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.search-result-item {
+  width: 100%;
+  min-height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 12px;
+  background: transparent;
+  border: 0;
+  color: var(--text-primary);
+    overflow: hidden;
+}
+
+.search-result-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.search-result-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: 0;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+  max-width: 90%;
+}
+
+.search-result-action {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.search-result-action:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.search-result-thumb {
+  width: 42px;
+  height: 30px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.search-result-texts {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.search-result-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.search-result-author {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-topbar-spacer {
+  width: 220px;
+  flex-shrink: 0;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
 }
 
 .loading-screen {
@@ -15,7 +230,7 @@
 
 .loading-text {
   font-size: 0.875rem;
-  color: var(--muted-foreground);
+  color: var(--text-secondary);
 }
 
 .main-content {
@@ -23,7 +238,8 @@
   min-width: 0;
   padding: 12px;
   padding-bottom: 128px;
-  height: 100%;
+  min-height: 0;
+  overflow: auto;
 }
 
 .main-wrapper {
@@ -36,19 +252,15 @@
 }
 
 
-/* Esconde o cabeçalho mobile no desktop por padrão */
-.mobile-header {
-  display: none;
-}
-
 .menu-close-btn {
   display: none;
 }
 
 @media (max-width: 768px) {
   .app-container {
-    flex-direction: column;
+    min-height: 100%;
   }
+
 
   /* Ativa o topo do aplicativo no celular */
   .mobile-header {
@@ -79,28 +291,32 @@
   }
 
   .mobile-header-spacer {
-    width: 32px; /* Mesma proporção do botão para equilibrar o título */
+    width: 32px;
+    /* Mesma proporção do botão para equilibrar o título */
   }
 
-/* 1. Faz a gaveta de fora ocupar 100% da largura da tela */
+  /* 1. Faz a gaveta de fora ocupar 100% da largura da tela */
   .sidebar-wrapper {
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
-    right: 0;           /* Adicionado para esticar até o canto direito */
-    width: 100vw;       /* Alterado de automático para ocupar 100% da largura */
+    right: 0;
+    /* Adicionado para esticar até o canto direito */
+    width: 100vw;
+    /* Alterado de automático para ocupar 100% da largura */
     z-index: 100;
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
-    box-shadow: none;   /* Como ocupa a tela toda, não precisa mais de sombra na lateral */
+    box-shadow: none;
+    /* Como ocupa a tela toda, não precisa mais de sombra na lateral */
   }
 
-.sidebar-wrapper.mobile-open {
+  .sidebar-wrapper.mobile-open {
     transform: translateX(0);
   }
 
-.sidebar-wrapper .sidebar-container {
+  .sidebar-wrapper .sidebar-container {
     height: 100vh;
     width: 100vw;
   }
@@ -118,7 +334,7 @@
     cursor: pointer;
     z-index: 101;
   }
-  
+
   .menu-close-btn:hover {
     color: #ffffff;
   }
@@ -136,6 +352,10 @@
   }
 
   .main-wrapper {
-    padding: 16px;
+    padding: 0px;
+  }
+
+  .app-body {
+    flex-direction: column;
   }
 }

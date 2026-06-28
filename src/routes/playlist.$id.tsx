@@ -20,14 +20,14 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Play, Shuffle, Trash2, Pencil, Check, X, ListMusic } from "lucide-react";
 import { toast } from "sonner";
-import { useStore } from "@/lib/store";
+import { useStore, currentTrack } from "@/lib/store";
 import "@/styles/page.css";
 import "@/styles/playlist.css";
 
 export const Route = createFileRoute("/playlist/$id")({
   head: ({ params }) => ({
     meta: [
-      { title: `Playlist — Norti Play` },
+      { title: 'Norti Play - Playlist' },
       { name: "description", content: `Detalhes da playlist ${params.id} no Norti Play.` },
     ],
   }),
@@ -233,6 +233,9 @@ function SortableRow({
   onRemove: () => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const current = useStore(currentTrack);
+  const playing = useStore((s) => s.isPlaying);
+  const isActive = current?.id === id;
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -241,7 +244,7 @@ function SortableRow({
   };
 
   return (
-    <li ref={setNodeRef} style={style} className="track-row">
+    <li ref={setNodeRef} style={style} className={`track-row ${isActive ? "active" : ""}`}>
       <button className="row-handle" {...attributes} {...listeners} aria-label="Reordenar">
         <GripVertical size={16} />
       </button>

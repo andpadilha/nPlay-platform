@@ -11,7 +11,7 @@ import "@/styles/search.css";
 export const Route = createFileRoute("/search")({
   head: () => ({
     meta: [
-      { title: "Buscar — Norti Play" },
+      { title: "Norti Play - Buscar" },
       { name: "description", content: "Busque vídeos no YouTube e adicione à sua biblioteca." },
     ],
   }),
