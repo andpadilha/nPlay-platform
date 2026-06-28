@@ -274,7 +274,6 @@ export const useStore = create<State & Actions>()(
         playlistOrder: s.playlistOrder,
         queue: s.queue,
         currentIndex: s.currentIndex,
-        isPlaying: s.isPlaying,
         volume: s.volume,
         muted: s.muted,
         shuffle: s.shuffle,

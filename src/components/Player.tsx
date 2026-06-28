@@ -86,10 +86,17 @@ function PlayerInner() {
   const queue = useStore((s) => s.queue);
   const currentIndex = useStore((s) => s.currentIndex);
 
+
   const next = useStore((s) => s.next);
   const prev = useStore((s) => s.prev);
   const togglePlay = useStore((s) => s.togglePlay);
+
   const setIsPlaying = useStore((s) => s.setIsPlaying);
+
+  useEffect(() => {
+    setIsPlaying(false);
+  }, [setIsPlaying]);
+
   const toggleShuffle = useStore((s) => s.toggleShuffle);
   const cycleRepeat = useStore((s) => s.cycleRepeat);
   const setVolume = useStore((s) => s.setVolume);
@@ -107,6 +114,8 @@ function PlayerInner() {
     setProgress(0);
     setDuration(0);
   }, [track?.id]);
+
+
 
   // refs to avoid stale closures inside YT event callbacks
   const repeatRef = useRef(repeat);
@@ -185,6 +194,12 @@ function PlayerInner() {
         events: {
           onReady: () => {
             ready.current = true;
+            try {
+              playerRef.current.setVolume(muted ? 0 : volume);
+              if (track) {
+                playerRef.current.cueVideoById(track.id);
+              }
+            } catch (e) { }
           },
           onStateChange: (e: any) => {
             if (e.data === window.YT.PlayerState.ENDED) {
@@ -224,13 +239,10 @@ function PlayerInner() {
   useEffect(() => {
     if (!ready.current || !playerRef.current || !track) return;
     try {
-      autoPlayRef.current = true;
-      playerRef.current.loadVideoById({ videoId: track.id, startSeconds: 0 });
-      setTimeout(() => {
-        if (autoPlayRef.current) playerRef.current.playVideo();
-      }, 150);
-    } catch {
-      /* noop */
+      playerRef.current.loadVideoById(track.id);
+      playerRef.current.pauseVideo(); // Garante que carregue pausado
+    } catch (e) {
+      console.error("Erro ao carregar vídeo:", e);
     }
   }, [track?.id]);
 
@@ -395,7 +407,7 @@ function PlayerBar(p: any) {
 
   return (
     <footer className={cn(
-      "player-footer", 
+      "player-footer",
       p.isMobileExpanded && p.isMobile && "mobile-fullscreen glass"
     )}>
       {p.isMobileExpanded && p.isMobile && (
@@ -410,7 +422,7 @@ function PlayerBar(p: any) {
 
       <div
         className={cn(
-          "player-bar-container glass", 
+          "player-bar-container glass",
           p.isMobileExpanded && p.isMobile && "expanded-layout",
           !hasTrack && "opacity-70"
         )}
@@ -448,15 +460,15 @@ function PlayerBar(p: any) {
             <IconBtn disabled={!hasTrack} onClick={p.onPrev} className="hide-on-mini">
               <SkipBack size={20} />
             </IconBtn>
-            
-            <button 
-              className="btn-play-pause" 
+
+            <button
+              className="btn-play-pause"
               onClick={(e) => { e.stopPropagation(); p.onPlay(); }}
               disabled={!hasTrack}
             >
               {p.isPlaying ? <Pause size={22} /> : <Play size={22} />}
             </button>
-            
+
             <IconBtn disabled={!hasTrack} onClick={p.onNext}>
               <SkipForward size={20} />
             </IconBtn>
