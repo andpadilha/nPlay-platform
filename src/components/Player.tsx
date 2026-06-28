@@ -90,12 +90,7 @@ function PlayerInner() {
   const next = useStore((s) => s.next);
   const prev = useStore((s) => s.prev);
   const togglePlay = useStore((s) => s.togglePlay);
-
   const setIsPlaying = useStore((s) => s.setIsPlaying);
-
-  useEffect(() => {
-    setIsPlaying(false);
-  }, [setIsPlaying]);
 
   const toggleShuffle = useStore((s) => s.toggleShuffle);
   const cycleRepeat = useStore((s) => s.cycleRepeat);
@@ -108,6 +103,7 @@ function PlayerInner() {
   const [pipDoc, setPipDoc] = useState<Document | null>(null);
   const [isMobileExpanded, setIsMobileExpanded] = useState(false);
   const isMobile = useIsMobile();
+  const currentVideoIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!track) return;
@@ -238,16 +234,22 @@ function PlayerInner() {
 
   useEffect(() => {
     if (!ready.current || !playerRef.current || !track) return;
-    try {
-      playerRef.current.loadVideoById(track.id);
-      playerRef.current.pauseVideo(); // Garante que carregue pausado
-    } catch (e) {
-      console.error("Erro ao carregar vídeo:", e);
-    }
-  }, [track?.id]);
 
-  useEffect(() => {
-    if (!ready.current || !playerRef.current) return;
+    if (currentVideoIdRef.current !== track.id) {
+      currentVideoIdRef.current = track.id;
+      try {
+        autoPlayRef.current = isPlaying;
+        if (isPlaying) {
+          playerRef.current.loadVideoById({ videoId: track.id, startSeconds: 0 });
+        } else {
+          playerRef.current.cueVideoById({ videoId: track.id, startSeconds: 0 });
+        }
+      } catch {
+        /* noop */
+      }
+      return;
+    }
+
     try {
       if (isPlaying) {
         autoPlayRef.current = true;
@@ -259,7 +261,7 @@ function PlayerInner() {
     } catch {
       /* noop */
     }
-  }, [isPlaying]);
+  }, [track?.id, isPlaying]);
 
   useEffect(() => {
     const t = setInterval(() => {

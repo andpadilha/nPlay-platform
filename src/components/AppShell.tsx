@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { Toaster } from "sonner";
-import { Loader2, Menu, Search, X } from "lucide-react";
+import { Toaster, toast } from "sonner";
+import { Loader2, Menu, Plus, Search, X } from "lucide-react";
 import { Sidebar } from "./Sidebar";
 import { useStore } from "@/lib/store";
-import { searchYouTube, type SearchResult } from "@/lib/youtube";
+import { fetchOEmbedMeta, searchYouTube, type SearchResult } from "@/lib/youtube";
 import "./AppShell.css";
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -14,6 +14,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [isSearching, setIsSearching] = useState(false);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const apiKey = useStore((s) => s.apiKey);
+  const addTrack = useStore((s) => s.addTrack);
+  const playTrack = useStore((s) => s.playTrack);
+  const tracks = useStore((s) => s.tracks);
   
   const [isMobile, setIsMobile] = useState(false);
 
@@ -86,6 +89,25 @@ useEffect(() => {
     if (!apiKey) return "Configure a API do YouTube para buscar";
     return "Buscar músicas no YouTube";
   }, [apiKey]);
+
+  const handleAddSuggestion = async (result: SearchResult) => {
+    if (!tracks[result.id]) {
+      const meta = await fetchOEmbedMeta(result.id).catch(() => null);
+      addTrack({
+        id: result.id,
+        title: meta?.title || result.title,
+        author: meta?.author || result.author,
+        thumbnail: meta?.thumbnail || result.thumbnail,
+        addedAt: Date.now(),
+      });
+      toast.success("Adicionado à biblioteca");
+    } else {
+      toast.info("Já está na biblioteca");
+    }
+
+    playTrack(result.id);
+    setShowSearchDropdown(false);
+  };
 
   if (!hydrated) {
     return (
@@ -170,32 +192,41 @@ useEffect(() => {
               </div>
             ) : searchResults.length > 0 ? (
               searchResults.map((result) => (
-                <button
-                  key={result.id}
-                  type="button"
-                  className="search-result-item"
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={() => {
-                    setSearchQuery(result.title);
-                    setShowSearchDropdown(false);
-                  }}
-                >
-                  <img
-                    src={result.thumbnail}
-                    alt=""
-                    className="search-result-thumb"
-                  />
+                <div key={result.id} className="search-result-item">
+                  <button
+                    type="button"
+                    className="search-result-main"
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={() => {
+                      setSearchQuery(result.title);
+                      setShowSearchDropdown(false);
+                    }}
+                  >
+                    <img src={result.thumbnail} alt="" className="search-result-thumb" />
 
-                  <span className="search-result-texts">
-                    <span className="search-result-title">
-                      {result.title}
+                    <span className="search-result-texts">
+                      <span className="search-result-title">{result.title}</span>
+                      <span className="search-result-author">{result.author}</span>
                     </span>
+                  </button>
 
-                    <span className="search-result-author">
-                      {result.author}
-                    </span>
-                  </span>
-                </button>
+                  <button
+                    type="button"
+                    className="search-result-action"
+                    onMouseDown={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                    }}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      void handleAddSuggestion(result);
+                    }}
+                    aria-label={`Adicionar ${result.title}`}
+                  >
+                    <Plus size={16} />
+                  </button>
+                </div>
               ))
             ) : (
               <div className="search-dropdown-empty">

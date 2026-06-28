@@ -17,8 +17,10 @@
   /* === Background === */
 
   --background-primary: oklch(0.04 0.005 275);
-  --background-secondary: rgba(10, 6, 18, 0.82) ;
+  --background-secondary: rgba(10, 6, 18, 0.82);
+  --background-secondary-60: rgba(10, 6, 18, 0.6);
   --background-card: oklch(23.041% 0.01858 35.71);
+  --background-drop: oklch(0.16 0.02 51.44 / 0.9);
 
   /* === Text === */
 
@@ -46,18 +48,14 @@
 
   /* === Gradients === */
 
-  --gradient-brand: linear-gradient(
-    135deg,
-    var(--brand) 0%,
-    var(--brand-light) 100%
-  );
+  --gradient-brand: linear-gradient(135deg,
+      var(--brand) 0%,
+      var(--brand-light) 100%);
 
-  --gradient-brand-radial: linear-gradient(
-    135deg,
-    var(--brand) 0%,
-    var(--brand-light) 55%,
-    var(--brand-dark) 100%
-  );
+  --gradient-brand-radial: linear-gradient(135deg,
+      var(--brand) 0%,
+      var(--brand-light) 55%,
+      var(--brand-dark) 100%);
 
   /* === Shadows === */
 

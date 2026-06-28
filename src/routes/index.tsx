@@ -68,7 +68,7 @@ function LibraryPage() {
 
       <section className="page-section">
         <div className="section-row">
-          <h2 className="section-h2">Faixas salvas</h2>
+          <h2 className="section-h2">Todas as faixas</h2>
           <span className="section-meta">{tracks.length}</span>
         </div>
         {tracks.length === 0 ? (
