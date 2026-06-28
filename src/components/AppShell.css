@@ -116,6 +116,8 @@
   background: var(--background-drop);
   box-shadow: 0 20px 50px var(--shadow-brand-soft);
   border: 1px solid var(--border-glass);
+  height: 400px;
+  overflow: auto;
 }
 
 .search-dropdown-empty {
@@ -126,6 +128,7 @@
 
 .search-result-item {
   width: 100%;
+  min-height: fit-content;
   display: flex;
   align-items: center;
   justify-content: space-between;

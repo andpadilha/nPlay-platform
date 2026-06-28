@@ -171,11 +171,32 @@ export const useStore = create<State & Actions>()(
         }),
 
       playTrack: (trackId, contextIds) => {
-        const ids = contextIds && contextIds.length ? contextIds : [trackId];
-        const idx = ids.indexOf(trackId);
+        const s = get();
+
+        if (contextIds && contextIds.length) {
+          const idx = contextIds.indexOf(trackId);
+          set({
+            queue: contextIds,
+            currentIndex: idx >= 0 ? idx : 0,
+            isPlaying: true,
+          });
+          return;
+        }
+
+        if (!s.queue.length) {
+          set({ queue: [trackId], currentIndex: 0, isPlaying: true });
+          return;
+        }
+
+        if (s.queue.includes(trackId)) {
+          const idx = s.queue.indexOf(trackId);
+          set({ currentIndex: idx, isPlaying: true });
+          return;
+        }
+
         set({
-          queue: ids,
-          currentIndex: idx >= 0 ? idx : 0,
+          queue: [trackId, ...s.queue],
+          currentIndex: 0,
           isPlaying: true,
         });
       },
