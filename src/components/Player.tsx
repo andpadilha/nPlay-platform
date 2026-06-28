@@ -375,10 +375,13 @@ function PipView({ track, isPlaying, progress, duration, onPlay, onNext, onPrev,
 
 function PlayerBar(p: any) {
   const pct = p.duration ? (p.progress / p.duration) * 100 : 0;
-  if (!p.track) return null;
+  const hasTrack = !!p.track;
 
   return (
-    <footer className={cn("player-footer", p.isMobileExpanded && p.isMobile && "mobile-fullscreen glass")}>
+    <footer className={cn(
+      "player-footer", 
+      p.isMobileExpanded && p.isMobile && "mobile-fullscreen glass"
+    )}>
       {p.isMobileExpanded && p.isMobile && (
         <div className="fullscreen-header">
           <button className="btn-minimize" onClick={() => p.setIsMobileExpanded(false)}>
@@ -390,72 +393,85 @@ function PlayerBar(p: any) {
       )}
 
       <div
-        className={cn("player-bar-container glass", p.isMobileExpanded && p.isMobile && "expanded-layout")}
+        className={cn(
+          "player-bar-container glass", 
+          p.isMobileExpanded && p.isMobile && "expanded-layout",
+          !hasTrack && "opacity-70"
+        )}
         onClick={() => {
-          if (!p.isMobileExpanded && p.isMobile) p.setIsMobileExpanded(true);
+          if (hasTrack && !p.isMobileExpanded && p.isMobile) p.setIsMobileExpanded(true);
         }}
       >
         <div className="track-info">
-          <img src={p.track.thumbnail} alt="" className="track-thumb" />
-          <div className="track-text">
-            <div className="track-title">{p.track.title}</div>
-            <div className="track-author">{p.track.author}</div>
-          </div>
+          {hasTrack ? (
+            <>
+              <img src={p.track.thumbnail} alt="" className="track-thumb" />
+              <div className="track-text">
+                <div className="track-title">{p.track.title}</div>
+                <div className="track-author">{p.track.author}</div>
+              </div>
+            </>
+          ) : (
+            <div className="track-text">
+              <div className="track-title" style={{ opacity: 0.5 }}>Nenhuma música</div>
+            </div>
+          )}
         </div>
 
-        <div className="controls-center" onClick={(e) => p.isMobileExpanded && e.stopPropagation()}>
+        <div className="controls-center" style={{ pointerEvents: hasTrack ? "auto" : "none" }}>
           <div className="progress-wrapper">
-            <span className="time-indicator tabular-nums">{formatTime(p.progress)}</span>
-            <ProgressBar value={pct} onSeek={p.onSeek} />
-            <span className="time-indicator tabular-nums">{formatTime(p.duration)}</span>
+            <span className="time-indicator tabular-nums">{hasTrack ? formatTime(p.progress) : "--:--"}</span>
+            <ProgressBar value={hasTrack ? pct : 0} onSeek={p.onSeek} />
+            <span className="time-indicator tabular-nums">{hasTrack ? formatTime(p.duration) : "--:--"}</span>
           </div>
 
           <div className="controls-buttons">
-            <IconBtn onClick={p.onShuffle} active={p.shuffle} className="hide-on-mini">
+            <IconBtn disabled={!hasTrack} onClick={p.onShuffle} active={p.shuffle} className="hide-on-mini">
               <Shuffle size={18} />
             </IconBtn>
-            <IconBtn onClick={p.onPrev} className="hide-on-mini">
+            <IconBtn disabled={!hasTrack} onClick={p.onPrev} className="hide-on-mini">
               <SkipBack size={20} />
             </IconBtn>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                p.onPlay();
-              }}
-              className="btn-play-pause"
+            
+            <button 
+              className="btn-play-pause" 
+              onClick={(e) => { e.stopPropagation(); p.onPlay(); }}
+              disabled={!hasTrack}
             >
               {p.isPlaying ? <Pause size={22} /> : <Play size={22} />}
             </button>
-            <IconBtn onClick={p.onNext}>
+            
+            <IconBtn disabled={!hasTrack} onClick={p.onNext}>
               <SkipForward size={20} />
             </IconBtn>
-            <IconBtn onClick={p.onRepeat} active={p.repeat !== "off"} className="hide-on-mini">
+            <IconBtn disabled={!hasTrack} onClick={p.onRepeat} active={p.repeat !== "off"} className="hide-on-mini">
               {p.repeat === "one" ? <Repeat1 size={18} /> : <Repeat size={18} />}
             </IconBtn>
           </div>
         </div>
 
-        <div className="controls-right" onClick={(e) => p.isMobileExpanded && e.stopPropagation()}>
+        <div className="controls-right" style={{ pointerEvents: hasTrack ? "auto" : "none" }}>
           <div className="utility-buttons-wrapper" style={{ display: "flex", gap: 4 }}>
-            <IconBtn onClick={p.onToggleQueue} active={p.showQueue}>
+            <IconBtn disabled={!hasTrack} onClick={p.onToggleQueue} active={p.showQueue}>
               <ListMusic size={18} />
             </IconBtn>
-            <IconBtn onClick={p.onPip} active={p.pipActive} className="hide-on-mobile-fs">
+            <IconBtn disabled={!hasTrack} onClick={p.onPip} active={p.pipActive} className="hide-on-mobile-fs">
               <PictureInPicture2 size={18} />
             </IconBtn>
           </div>
 
           <div className="volume-container-box" style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <IconBtn onClick={p.onMute}>
+            <IconBtn disabled={!hasTrack} onClick={p.onMute}>
               {p.muted || p.volume === 0 ? <VolumeX size={18} /> : <Volume2 size={18} />}
             </IconBtn>
             <input
               type="range"
               min={0}
               max={100}
-              value={p.muted ? 0 : p.volume}
+              value={hasTrack ? (p.muted ? 0 : p.volume) : 0}
               onChange={(e) => p.onVolume(Number(e.target.value))}
               className="volume-slider"
+              disabled={!hasTrack}
             />
           </div>
         </div>

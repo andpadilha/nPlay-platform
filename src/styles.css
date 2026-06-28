@@ -17,7 +17,7 @@
   /* === Background === */
 
   --background-primary: oklch(0.04 0.005 275);
-  --background-secondary: oklch(11.492% 0.00001 271.152);
+  --background-secondary: rgba(10, 6, 18, 0.82) ;
   --background-card: oklch(23.041% 0.01858 35.71);
 
   /* === Text === */
@@ -38,6 +38,7 @@
 
   --glass-background: oklch(1 0 0 / 0.03);
   --glass-background-strong: oklch(0.08 0.008 275 / 0.60);
+  --glass-background-brand: oklch(69.404% 0.2031 40.89 / 0.03);
 
   /* === Effects === */
 

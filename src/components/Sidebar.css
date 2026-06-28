@@ -216,6 +216,7 @@
     display: flex;
     width: 100% !important;
     height: 100% !important;
+    background-color: var(--glass-background-brand);
   }
 
   .playlist-panel {

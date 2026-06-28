@@ -19,10 +19,7 @@
 }
 
 .track-card.active {
-  border-color: color-mix(in srgb, var(--brand-light) 70%, white 30%);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand-light) 70%, white 30%), 0 0 0 4px color-mix(in srgb, var(--brand-light) 18%, transparent);
-  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
-  transform: translateY(-1px);
+  box-shadow: 0 0 0 1px oklch(0.72 0.18 48 / 0.6);
 }
 
 .track-card.menu-open {
@@ -237,6 +234,21 @@
 .menu-item:hover {
   background: rgba(255, 255, 255, .1);
 }
+
+.menu-item span {
+  flex: 1;
+  text-align: left;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.menu-item svg {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+} 
+
 
 .menu-item.destructive {
   color: var(--feedback-danger);

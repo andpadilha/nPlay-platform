@@ -213,11 +213,6 @@
 }
 
 
-/* Esconde o cabeçalho mobile no desktop por padrão */
-.mobile-header {
-  display: none;
-}
-
 .menu-close-btn {
   display: none;
 }
@@ -227,9 +222,6 @@
     min-height: 100%;
   }
 
-  .app-topbar {
-    display: none;
-  }
 
   /* Ativa o topo do aplicativo no celular */
   .mobile-header {

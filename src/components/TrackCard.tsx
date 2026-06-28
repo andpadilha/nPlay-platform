@@ -83,7 +83,7 @@ function PlaylistMenu({
           className="menu-item"
         >
           <Plus size={14} />
-          {p.name}
+          <span>{p.name}</span>
         </button>
       ))}
       <div className="menu-divider" />
