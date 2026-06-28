@@ -56,8 +56,18 @@ function loadYouTubeAPI(): Promise<void> {
 
 export function Player() {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const rehydrate = async () => {
+      await useStore.persist.rehydrate();
+      setHydrated(true);
+    };
+    void rehydrate();
+  }, []);
+
+  if (!mounted || !hydrated) return null;
   return <PlayerInner />;
 }
 
@@ -91,6 +101,12 @@ function PlayerInner() {
   const [pipDoc, setPipDoc] = useState<Document | null>(null);
   const [isMobileExpanded, setIsMobileExpanded] = useState(false);
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    if (!track) return;
+    setProgress(0);
+    setDuration(0);
+  }, [track?.id]);
 
   // refs to avoid stale closures inside YT event callbacks
   const repeatRef = useRef(repeat);
@@ -413,7 +429,7 @@ function PlayerBar(p: any) {
             </>
           ) : (
             <div className="track-text">
-              <div className="track-title" style={{ opacity: 0.5 }}>Nenhuma música</div>
+              <div className="track-title" style={{ opacity: 0.5 }}>Última música</div>
             </div>
           )}
         </div>
