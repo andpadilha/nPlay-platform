@@ -11,7 +11,7 @@ import "@/styles/settings.css";
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
-      { title: "Configurações — Norti Play" },
+      { title: "Norti Play - Configurações" },
       { name: "description", content: "Gerencie sua chave de API, dados e preferências do Norti Play." },
     ],
   }),

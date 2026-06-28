@@ -7,7 +7,7 @@
   background:
     radial-gradient(at 0% 0%, var(--focus-ring), transparent 60%),
     radial-gradient(at 100% 100%, var(--focus-ring), transparent 60%),
-    var(--glass-background-background);
+    var(--glass-background);
 }
 
 .playlist-cover {
@@ -82,7 +82,7 @@
 
 .playlist-name-input {
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--glass-background-background-border);
+  border: 1px solid var(--glass-background);
   border-radius: 0.5rem;
   padding: 8px 12px;
   color: var(--text-primary);
@@ -107,9 +107,15 @@
   gap: 12px;
   padding: 8px 10px;
   border-radius: 0.75rem;
-  transition: background 0.2s;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  border: 1px solid transparent;
 }
 .track-row:hover { background: rgba(255, 255, 255, 0.05); }
+.track-row.active {
+  border-color: color-mix(in srgb, var(--brand-light) 65%, white 35%);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand-light) 20%, transparent);
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+}
 
 .row-handle {
   background: none;
@@ -162,7 +168,7 @@
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--glass-background-background-border);
+  border: 1px solid var(--glass-background);
   color: var(--text-primary);
   cursor: pointer;
 }

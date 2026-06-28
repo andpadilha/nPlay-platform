@@ -19,6 +19,7 @@ import {
 import { useStore, currentTrack } from "@/lib/store";
 import { formatTime } from "@/lib/youtube";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 import "./Player.css";
 
 declare global {
@@ -89,6 +90,7 @@ function PlayerInner() {
   const [showQueue, setShowQueue] = useState(false);
   const [pipDoc, setPipDoc] = useState<Document | null>(null);
   const [isMobileExpanded, setIsMobileExpanded] = useState(false);
+  const isMobile = useIsMobile();
 
   // refs to avoid stale closures inside YT event callbacks
   const repeatRef = useRef(repeat);
@@ -101,7 +103,13 @@ function PlayerInner() {
   }, [next]);
 
   useEffect(() => {
-    if (isMobileExpanded) {
+    if (!isMobile && isMobileExpanded) {
+      setIsMobileExpanded(false);
+    }
+  }, [isMobile, isMobileExpanded]);
+
+  useEffect(() => {
+    if (isMobileExpanded && isMobile) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -109,7 +117,7 @@ function PlayerInner() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isMobileExpanded]);
+  }, [isMobileExpanded, isMobile]);
 
   const requestPip = async () => {
     if (!("documentPictureInPicture" in window) || !window.documentPictureInPicture) return;
@@ -289,6 +297,7 @@ function PlayerInner() {
         pipActive={!!pipDoc}
         isMobileExpanded={isMobileExpanded}
         setIsMobileExpanded={setIsMobileExpanded}
+        isMobile={isMobile}
       />
       {showQueue && <QueueDrawer onClose={() => setShowQueue(false)} />}
       {pipDoc &&
@@ -369,8 +378,8 @@ function PlayerBar(p: any) {
   if (!p.track) return null;
 
   return (
-    <footer className={cn("player-footer glass", p.isMobileExpanded && "mobile-fullscreen glass")}>
-      {p.isMobileExpanded && (
+    <footer className={cn("player-footer", p.isMobileExpanded && p.isMobile && "mobile-fullscreen glass")}>
+      {p.isMobileExpanded && p.isMobile && (
         <div className="fullscreen-header">
           <button className="btn-minimize" onClick={() => p.setIsMobileExpanded(false)}>
             <ChevronDown size={28} />
@@ -381,9 +390,9 @@ function PlayerBar(p: any) {
       )}
 
       <div
-        className={cn("player-bar-container glass-strong glow-pink", p.isMobileExpanded && "expanded-layout")}
+        className={cn("player-bar-container glass", p.isMobileExpanded && p.isMobile && "expanded-layout")}
         onClick={() => {
-          if (!p.isMobileExpanded) p.setIsMobileExpanded(true);
+          if (!p.isMobileExpanded && p.isMobile) p.setIsMobileExpanded(true);
         }}
       >
         <div className="track-info">
@@ -494,7 +503,7 @@ function QueueDrawer({ onClose }: { onClose: () => void }) {
   const playQueue = useStore((s) => s.playQueue);
 
   return (
-    <div className="queue-drawer glass-strong glow-violet">
+    <div className="queue-drawer glass">
       <div className="queue-header">
         <h3 className="queue-title">Fila de reprodução</h3>
         <button onClick={onClose} className="queue-close-btn">

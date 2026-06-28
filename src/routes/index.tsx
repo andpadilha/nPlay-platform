@@ -10,7 +10,7 @@ import "@/styles/page.css";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Biblioteca — Norti Play" },
+      { title: " Norti Play - Biblioteca" },
       { name: "description", content: "Sua biblioteca pessoal de músicas no Norti Play." },
     ],
   }),

@@ -36,8 +36,8 @@
 
   /* === Glass === */
 
-  --glass-background-background: oklch(1 0 0 / 0.03);
-  --glass-background-background-strong: oklch(0.08 0.008 275 / 0.60);
+  --glass-background: oklch(1 0 0 / 0.03);
+  --glass-background-strong: oklch(0.08 0.008 275 / 0.60);
 
   /* === Effects === */
 
@@ -60,7 +60,7 @@
 
   /* === Shadows === */
 
-  --shadow-brand: 0 20px 60px -20px oklch(0.60 0.18 45 / 0.15);
+  --shadow-brand: 0 0 20px 0px oklch(0.60 0.18 45 / 0.25);
   --shadow-brand-soft: 0 20px 60px -20px oklch(0.60 0.15 45 / 0.20);
   --shadow-elevated: 0 25px 80px -20px rgba(0, 0, 0, 0.6);
 
@@ -163,17 +163,17 @@ button {
 
 /* Glass helpers (used across components) */
 .glass {
-  background: var(--glass-background-background);
+  background: var(--glass-background);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid var(--glass-background-background-border);
+  border: 1px solid var(--glass-background);
 }
 
 .glass-strong {
-  background: var(--glass-background-background-strong);
+  background: var(--glass-background-strong);
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border: 1px solid var(--glass-background-background-border);
+  border: 1px solid var(--glass-background);
 }
 
 .glow-violet {
