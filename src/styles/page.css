@@ -97,7 +97,7 @@
   padding: 10px 16px;
   border-radius: 0.75rem;
   background: var(--gradient-brand);
-  color: white;
+  color: var(--text-on-brand);
   border: none;
   cursor: pointer;
   font-weight: 600;

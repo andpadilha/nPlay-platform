@@ -19,7 +19,7 @@
 }
 
 .track-card.active {
-  box-shadow: 0 0 0 1px oklch(0.72 0.18 48 / 0.6);
+    border: 1px solid var(--brand-light);
 }
 
 .track-card.menu-open {
