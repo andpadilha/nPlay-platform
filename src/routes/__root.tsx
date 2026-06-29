@@ -5,7 +5,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { AppShell } from "@/components/AppShell";
 import { Player } from "@/components/Player";
@@ -47,6 +47,18 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   useGlobalShortcuts();
+
+  useEffect(() => {
+    const savedColor = localStorage.getItem("nortiplay:brand-color");
+    if (savedColor) {
+      document.documentElement.style.setProperty("--brand", savedColor);
+      // Recalcule o texto de contraste aqui se necessário
+    } else {
+      // Garante que se não houver nada salvo, o root fique limpo
+      document.documentElement.style.removeProperty("--brand");
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AppShell>
