@@ -245,8 +245,15 @@ export const useStore = create<State & Actions>()(
       setVolume: (v) => set({ volume: Math.max(0, Math.min(100, v)), muted: v === 0 }),
       toggleMute: () => set((s) => ({ muted: !s.muted })),
 
-      setApiKey: (key) => set({ apiKey: key }),
-      clearApiKey: () => set({ apiKey: "" }),
+      setApiKey: (key) =>
+        set({
+          apiKey: key.trim() || YOUTUBE_API_KEY,
+        }),
+
+      clearApiKey: () =>
+        set({
+          apiKey: YOUTUBE_API_KEY,
+        }),
       clearAllData: () =>
         set({
           tracks: {},
@@ -288,6 +295,7 @@ export const useStore = create<State & Actions>()(
       name: "nortiplay:v1",
       storage: createJSONStorage(() => localStorage),
       skipHydration: true,
+
       partialize: (s) => ({
         tracks: s.tracks,
         trackOrder: s.trackOrder,
@@ -299,7 +307,6 @@ export const useStore = create<State & Actions>()(
         muted: s.muted,
         shuffle: s.shuffle,
         repeat: s.repeat,
-        apiKey: s.apiKey,
       }),
     },
   ),
