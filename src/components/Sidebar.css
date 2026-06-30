@@ -52,7 +52,7 @@
   width: 36px;
   height: 36px;
   border-radius: 0.75rem;
-  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-light) 100%);
+  background: var(--gradient-brand);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,12 +132,14 @@
 }
 
 .form-wrapper {
+  box-sizing: border-box;
   display: flex;
   gap: 8px;
   margin-bottom: 8px;
 }
 
 .input-playlist {
+  width: 100%;
   flex: 1;
   padding: 6px 12px;
   border-radius: 0.5rem;
@@ -145,12 +147,13 @@
   border: 1px solid oklch(1 0 0 / 0.1);
   color: white;
   font-size: 0.875rem;
+  box-sizing: border-box;
 }
 
 .btn-create {
   padding: 6px 8px;
   border-radius: 0.5rem;
-  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-light) 100%);
+  background: var(--gradient-brand);
   border: none;
   font-size: 0.75rem;
   font-weight: 600;

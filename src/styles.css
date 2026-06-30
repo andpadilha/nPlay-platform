@@ -86,8 +86,8 @@
 
   --gradient-brand: linear-gradient(
     135deg,
-    var(--brand),
-    var(--brand-light)
+    var(--brand) 0%,
+    var(--brand-light) 100%
   );
 
   --gradient-brand-radial: linear-gradient(

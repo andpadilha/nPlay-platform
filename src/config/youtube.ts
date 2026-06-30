@@ -1,9 +1,6 @@
 /**
- * YouTube Data API v3 — chave padrão do produto.
- *
- * Para usar a busca por palavras-chave, defina aqui ou na tela Configurações.
- * A chave configurada em Settings (persistida em localStorage) tem prioridade.
- *
- * Ex.: export const YOUTUBE_API_KEY = "AIza...";
+ * YouTube Data API v3
+ * Lê automaticamente a chave definida no arquivo .env
  */
-export const YOUTUBE_API_KEY = "";
+export const YOUTUBE_API_KEY =
+  import.meta.env.VITE_YOUTUBE_API_KEY ?? "";

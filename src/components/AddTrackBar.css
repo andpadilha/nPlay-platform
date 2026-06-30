@@ -29,7 +29,7 @@
   gap: 8px;
   padding: 10px 16px;
   border-radius: 0.75rem;
-  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-light) 100%);
+  background: var(--gradient-brand);
       color: var(--text-on-brand);
   font-size: 0.875rem;
   font-weight: 600;

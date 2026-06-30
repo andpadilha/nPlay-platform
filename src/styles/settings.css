@@ -127,8 +127,7 @@
 }
 
 .theme-picker-inline {
-  display: grid;
-  grid-template-columns: 92px 1fr;
+  display: flex;
   gap: 10px;
 }
 
@@ -140,14 +139,72 @@
   font-size: 0.8rem;
 }
 
-.color-input {
+.theme-field-custom {
   width: 100%;
-  height: 44px;
-  border: 1px solid var(--glass-background);
-  border-radius: 0.75rem;
-  background: rgba(255,255,255,0.05);
+}
+
+.theme-custom-picker {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.theme-custom-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 300px;
+  min-height: 46px;
   padding: 4px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   cursor: pointer;
+}
+
+.theme-custom-pill.active {
+  border-color: rgba(255,255,255,0.9);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.14);
+}
+
+.theme-custom-pill-value {
+  flex: 1;
+  padding-left: 12px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.theme-custom-pill-button {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.6);
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+.theme-custom-pill-button:hover {
+  background: rgba(255,255,255,0.9);
+}
+
+.theme-color-input-hidden {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
 }
 
 .theme-input {

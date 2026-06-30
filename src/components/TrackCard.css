@@ -1,14 +1,14 @@
 /* TrackCard.css */
 
 .track-card {
-    -webkit-backdrop-filter: blur(24px) saturate(160%);
-    backdrop-filter: blur(24px) saturate(160%);
-    background: oklch(100% 0 0 / .03);
-    border: 1px solid oklch(100% 0 0 / .08);
-    border-radius: 1.4rem;
-    padding: 12px;
-    transition: all .2s;
-    position: relative;
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
+  background: oklch(100% 0 0 / .03);
+  border: 1px solid oklch(100% 0 0 / .08);
+  border-radius: 1.4rem;
+  padding: 12px;
+  transition: all .2s;
+  position: relative;
 }
 
 .track-card:hover {
@@ -19,7 +19,7 @@
 }
 
 .track-card.active {
-    border: 1px solid var(--brand-light);
+  border: 1px solid var(--brand-light);
 }
 
 .track-card.menu-open {
@@ -49,11 +49,11 @@
   width: 38px;
   height: 38px;
   border-radius: 999px;
-  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-light) 100%);
+  background: var(--gradient-brand);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--text-on-brand);
   border: none;
   cursor: pointer;
   box-shadow: 0 12px 35px -15px oklch(0.60 0.15 45 / 0.35);
@@ -85,7 +85,7 @@
   font-size: 0.6rem;
   border-radius: 999px;
   background: var(--brand-light);
-  color: var(--brand-light-foreground);
+  color: var(--text-on-brand);
   font-weight: 600;
 }
 
@@ -247,7 +247,7 @@
   flex-shrink: 0;
   width: 14px;
   height: 14px;
-} 
+}
 
 
 .menu-item.destructive {
