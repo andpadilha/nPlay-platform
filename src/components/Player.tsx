@@ -157,7 +157,24 @@ function PlayerInner() {
       document.querySelectorAll('link[rel="stylesheet"], style').forEach((node) => {
         win.document.head.appendChild(node.cloneNode(true));
       });
-      win.document.body.style.background = "#0f0a1e";
+
+      // Copia todas as CSS Variables do tema atual
+      const sourceRoot = getComputedStyle(document.documentElement);
+      const targetRoot = win.document.documentElement;
+
+      for (const property of sourceRoot) {
+        if (!property.startsWith("--")) continue;
+
+        targetRoot.style.setProperty(
+          property,
+          sourceRoot.getPropertyValue(property)
+        );
+      }
+
+      // Usa o mesmo background da aplicação
+      win.document.body.style.background =
+        sourceRoot.getPropertyValue("--background-secondary");
+
       setPipDoc(win.document);
       win.addEventListener("pagehide", () => setPipDoc(null));
     } catch (e) {
@@ -178,6 +195,26 @@ function PlayerInner() {
       /* noop */
     }
   }, [volume, muted]);
+
+  
+  useEffect(() => {
+  if (!pipDoc) return;
+
+  const sourceRoot = getComputedStyle(document.documentElement);
+
+  for (const property of sourceRoot) {
+    if (!property.startsWith("--")) continue;
+
+    pipDoc.documentElement.style.setProperty(
+      property,
+      sourceRoot.getPropertyValue(property)
+    );
+  }
+
+  pipDoc.body.style.background =
+    sourceRoot.getPropertyValue("--background-secondary");
+
+}, [pipDoc]);
 
   useEffect(() => {
     let cancelled = false;

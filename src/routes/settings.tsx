@@ -9,7 +9,7 @@ import "@/styles/page.css";
 import "@/styles/settings.css";
 
 const BRAND_STORAGE_KEY = "nortiplay:brand-color";
-const STATIC_PRESETS = ["#7c3aed", "#38bdf8", "#f43f5e", "#f59e0b", "#f472b6"];
+const STATIC_PRESETS = ["#7c3aed", "#38bdf8", "#f43f5e", "#00D647", "#f472b6"];
 
 function normalizeBrandColor(value: string | null | undefined) {
   if (!value) return null;
@@ -84,7 +84,7 @@ function SettingsPage() {
 
   const defaultColor = useMemo(() => getDefaultBrandColor(), []);
 
-  const PRESET_COLORS = useMemo(() => [defaultColor, ...STATIC_PRESETS], [defaultColor]);
+  const PRESET_COLORS = STATIC_PRESETS;
 
   const initialBrandColor = useMemo(() => {
     if (typeof window === "undefined") return defaultColor;
@@ -95,8 +95,20 @@ function SettingsPage() {
   const [draft, setDraft] = useState(apiKey);
   const [show, setShow] = useState(false);
   const [brandColor, setBrandColor] = useState(initialBrandColor);
+  const [customColor, setCustomColor] = useState(initialBrandColor);
   const [brandInput, setBrandInput] = useState(initialBrandColor);
+  const [selectedColorMode, setSelectedColorMode] = useState<"preset" | "custom">(() => {
+    if (typeof window === "undefined") return "preset";
+
+    const saved = localStorage.getItem(BRAND_STORAGE_KEY);
+    const normalizedSaved = normalizeBrandColor(saved);
+
+    if (!normalizedSaved) return "preset";
+
+    return STATIC_PRESETS.some((preset) => preset.toLowerCase() === normalizedSaved.toLowerCase()) ? "preset" : "custom";
+  });
   const fileRef = useRef<HTMLInputElement>(null);
+  const customColorInputRef = useRef<HTMLInputElement>(null);
 
   const save = () => {
     setApiKey(draft.trim());
@@ -123,38 +135,56 @@ function SettingsPage() {
     }
   };
 
-  useEffect(() => {
-    const textOnBrand = getContrastTextColor(brandColor);
-    document.documentElement.style.setProperty("--brand", brandColor);
-    document.documentElement.style.setProperty("--text-on-brand", textOnBrand);
-    localStorage.setItem(BRAND_STORAGE_KEY, brandColor);
-  }, [brandColor]);
 
   const applyBrandColor = () => {
-    const normalized = normalizeBrandColor(brandInput);
-    if (!normalized) {
-      toast.error("Digite uma cor válida em formato hexadecimal.");
-      return;
-    }
-    setBrandColor(normalized);
-    setBrandInput(normalized);
-    toast.success("Tema atualizado");
-  };
+  const normalized = normalizeBrandColor(
+    selectedColorMode === "custom" ? customColor : brandColor,
+  );
 
-  const resetBrandColor = () => {
-    localStorage.removeItem(BRAND_STORAGE_KEY);
+  if (!normalized) {
+    toast.error("Digite uma cor válida em formato hexadecimal.");
+    return;
+  }
 
-    document.documentElement.style.removeProperty("--brand");
-    document.documentElement.style.removeProperty("--text-on-brand");
+  // Aplica imediatamente no app
+  const textOnBrand = getContrastTextColor(normalized);
 
-    const rootStyle = getComputedStyle(document.documentElement);
-    const currentDefault = rootStyle.getPropertyValue("--brand").trim() || "#d97706";
+  document.documentElement.style.setProperty("--brand", normalized);
+  document.documentElement.style.setProperty("--text-on-brand", textOnBrand);
 
-    setBrandColor(currentDefault);
-    setBrandInput(currentDefault);
+  // Salva para o próximo carregamento
+  localStorage.setItem(BRAND_STORAGE_KEY, normalized);
 
-    toast.success("Tema restaurado para o padrão original");
-  };
+  // Atualiza os estados da tela de Configurações
+  setBrandColor(normalized);
+  setCustomColor(normalized);
+  setBrandInput(normalized);
+  setSelectedColorMode(
+    PRESET_COLORS.some(
+      (preset) => preset.toLowerCase() === normalized.toLowerCase(),
+    )
+      ? "preset"
+      : "custom",
+  );
+
+  toast.success("Tema atualizado");
+};
+
+const resetBrandColor = () => {
+  localStorage.removeItem(BRAND_STORAGE_KEY);
+
+  document.documentElement.style.removeProperty("--brand");
+  document.documentElement.style.removeProperty("--text-on-brand");
+
+  const currentDefault = getDefaultBrandColor();
+
+  setBrandColor(currentDefault);
+  setCustomColor(currentDefault);
+  setBrandInput(currentDefault);
+  setSelectedColorMode("preset");
+
+  toast.success("Tema restaurado para o padrão original");
+};
 
   return (
     <motion.div className="page" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
@@ -200,7 +230,7 @@ function SettingsPage() {
           </div>
         </div>
         <div className="theme-picker-shell">
-          <div className="theme-preview-card" style={{ background: `linear-gradient(135deg, ${brandColor}, color-mix(in srgb, ${brandColor} 55%, white 30%))` }}>
+          <div className="theme-preview-card" style={{ background: `linear-gradient(135deg, ${brandColor}, color-mix(in srgb, ${brandColor} 55%, white 20%))` }}>
             <div className="theme-preview-content">
               <span className="theme-preview-pill">Preview ao vivo</span>
               <div className="theme-preview-title">A identidade da sua plataforma</div>
@@ -209,13 +239,43 @@ function SettingsPage() {
           </div>
           <div className="theme-controls">
             <div className="theme-picker-inline">
-              <label className="theme-field">
-                <span>Seletor</span>
-                <input type="color" value={brandColor} onChange={(e) => { setBrandColor(e.target.value); setBrandInput(e.target.value); }} className="color-input" />
-              </label>
-              <label className="theme-field">
-                <span>Hexadecimal</span>
-                <input type="text" value={brandInput} onChange={(e) => setBrandInput(e.target.value)} placeholder="#4ade80" className="settings-input theme-input" />
+              <label className="theme-field theme-field-custom">
+                <span>Custom</span>
+                <div className="theme-custom-picker">
+                  <button
+                    type="button"
+                    className={`theme-custom-pill ${selectedColorMode === "custom" ? "active" : ""}`}
+                    onClick={() => {
+                      setBrandColor(customColor);
+                      setBrandInput(customColor);
+                      setSelectedColorMode("custom");
+                    }}
+                    style={{ backgroundColor: customColor, color: getContrastTextColor(customColor) }}
+                  >
+                    <span className="theme-custom-pill-value">{customColor.toUpperCase()}</span>
+                    <button
+                      type="button"
+                      className="theme-custom-pill-button"
+                      onClick={() => customColorInputRef.current?.click()}
+                      aria-label="Escolher cor personalizada"
+                    >
+                      <Palette size={14} />
+                    </button>
+                  </button>
+                  <input
+                    ref={customColorInputRef}
+                    type="color"
+                    value={customColor}
+                    onChange={(e) => {
+                      const nextColor = e.target.value;
+                      setCustomColor(nextColor);
+                      setBrandColor(nextColor);
+                      setBrandInput(nextColor);
+                      setSelectedColorMode("custom");
+                    }}
+                    className="theme-color-input-hidden"
+                  />
+                </div>
               </label>
             </div>
             <div className="theme-swatches">
@@ -223,8 +283,11 @@ function SettingsPage() {
                 <button
                   key={preset}
                   type="button"
-                  className={`theme-swatch ${brandColor === preset ? "active" : ""}`}
-                  onClick={() => { setBrandColor(preset); setBrandInput(preset); }}
+                  className={`theme-swatch ${selectedColorMode === "preset" && brandColor === preset ? "active" : ""}`}
+                  onClick={() => {
+                    setBrandColor(preset);
+                    setSelectedColorMode("preset");
+                  }}
                   style={{ backgroundColor: preset }}
                 />
               ))}

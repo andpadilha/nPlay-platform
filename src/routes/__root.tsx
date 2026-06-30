@@ -48,16 +48,24 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   useGlobalShortcuts();
 
-  useEffect(() => {
-    const savedColor = localStorage.getItem("nortiplay:brand-color");
-    if (savedColor) {
-      document.documentElement.style.setProperty("--brand", savedColor);
-      // Recalcule o texto de contraste aqui se necessário
-    } else {
-      // Garante que se não houver nada salvo, o root fique limpo
-      document.documentElement.style.removeProperty("--brand");
-    }
-  }, []);
+useEffect(() => {
+  const savedColor = localStorage.getItem("nortiplay:brand-color");
+  if (!savedColor) return;
+
+  const hex = savedColor.startsWith("#") ? savedColor : `#${savedColor}`;
+
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+
+  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  const textColor = luminance > 0.62 ? "#111111" : "#ffffff";
+
+  const root = document.documentElement;
+
+  root.style.setProperty("--brand", hex);
+  root.style.setProperty("--text-on-brand", textColor);
+}, []);
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -134,7 +134,7 @@
     border-radius: 999px;
     border: none;
     background: var(--brand-light);
-    color: var(--brand-foreground);
+    color: var(--text-on-brand);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -303,7 +303,7 @@
     width: 2.75rem;
     height: 2.75rem;
     border-radius: 9999px;
-    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-light) 100%);
+    background: var(--gradient-brand);
     color: var(--text-on-brand);
     display: flex;
     align-items: center;
@@ -339,7 +339,7 @@
 .progress-fill {
     height: 100%;
     border-radius: 9999px;
-    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-light) 100%);
+    background: var(--gradient-brand);
     width: var(--progress-pct);
 }
 
