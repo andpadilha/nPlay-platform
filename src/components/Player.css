@@ -493,7 +493,7 @@
         max-height: 100vh;
         border-radius: 0;
         /* Remove bordas arredondadas nos cantos da tela */
-        z-index: 250;
+        z-index: 9999;
         /* Fica acima dos 200 do player fullscreen */
 
         /* Backdrop blur mantendo o padrão glass da sua aplicação */
