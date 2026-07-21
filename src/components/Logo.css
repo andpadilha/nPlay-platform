@@ -1,0 +1,23 @@
+.brand-logo-svg {
+  width: 32px;
+  height: 32px;
+  color: var(--brand);
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.brand-logo-svg:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+.logo-mobile {
+    min-width: 24px !important;
+    min-height: 24px !important;
+    color: var(--brand);
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.logo-mobile svg {
+    min-width: 24px !important;
+    min-height: 24px !important;
+}

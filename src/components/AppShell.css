@@ -44,7 +44,7 @@
 }
 
 .brand-logo svg {
-    color: var(--text-on-brand);
+  color: var(--text-on-brand);
 }
 
 .brand-copy {
@@ -142,7 +142,7 @@
   background: transparent;
   border: 0;
   color: var(--text-primary);
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .search-result-item:hover {
@@ -281,9 +281,12 @@
   }
 
   .mobile-brand-title {
+    display: flex;
+    flex-wrap: nowrap;
     font-weight: 700;
     font-size: 16px;
     color: #ffffff;
+    min-width: fit-content;
   }
 
   .menu-toggle-btn {
@@ -362,5 +365,71 @@
 
   .app-body {
     flex-direction: column;
+  }
+}
+
+
+/* Estilos para Mobile Bottom Navigation */
+@media (max-width: 768px) {
+
+  /* Espaço no fim da página para não cobrir o conteúdo final */
+  .app-body {
+    padding-bottom: 70px;
+  }
+
+  .mobile-header-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 16px;
+    height: 50px;
+  }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    z-index: 1000;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(18, 18, 18, 0.85);
+    backdrop-filter: blur(12px);
+    padding-bottom: env(safe-area-inset-bottom);
+    /* Suporte a telas com barra gestual em iOS/Android */
+  }
+
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.72rem;
+    font-weight: 500;
+    cursor: pointer;
+    flex: 1;
+    height: 100%;
+    transition: color 0.2s ease, transform 0.1s ease;
+  }
+
+  .bottom-nav-item.active {
+    color: #ffffff;
+  }
+
+  .bottom-nav-item:active {
+    transform: scale(0.95);
   }
 }

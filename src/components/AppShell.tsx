@@ -1,21 +1,26 @@
+import { Link, useRouterState } from "@tanstack/react-router";
+import { Library, Search, Settings, ListMusic, Plus, Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Toaster, toast } from "sonner";
-import { Loader2, Menu, Plus, Search, X } from "lucide-react";
 import { Sidebar } from "./Sidebar";
 import { useStore } from "@/lib/store";
 import { fetchOEmbedMeta, searchYouTube, getYouTubeSuggestions, type SearchResult } from "@/lib/youtube";
 import "./AppShell.css";
+import { Logo } from "./Logo";
 
 const searchCache = new Map<string, SearchResult[]>();
 
 export function AppShell({ children }: { children: ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+
+  // Obtém o caminho atual diretamente do TanStack Router
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
   const apiKey = useStore((s) => s.apiKey);
   const addTrack = useStore((s) => s.addTrack);
   const playTrack = useStore((s) => s.playTrack);
@@ -25,7 +30,6 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 768px)");
-
     setIsMobile(media.matches);
 
     const onChange = (e: MediaQueryListEvent) => {
@@ -33,7 +37,6 @@ export function AppShell({ children }: { children: ReactNode }) {
     };
 
     media.addEventListener("change", onChange);
-
     return () => media.removeEventListener("change", onChange);
   }, []);
 
@@ -41,20 +44,6 @@ export function AppShell({ children }: { children: ReactNode }) {
     const p = useStore.persist.rehydrate();
     Promise.resolve(p).finally(() => setHydrated(true));
   }, []);
-
-  useEffect(() => {
-    if (isSidebarOpen) {
-      document.body.style.overflow = "hidden";
-      document.body.style.touchAction = "none";
-    } else {
-      document.body.style.overflow = "";
-      document.body.style.touchAction = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-      document.body.style.touchAction = "";
-    };
-  }, [isSidebarOpen]);
 
   useEffect(() => {
     const query = searchQuery.trim();
@@ -72,7 +61,6 @@ export function AppShell({ children }: { children: ReactNode }) {
       setIsSearching(true);
 
       try {
-        // 1. Verifica no Cache (Economiza custo)
         const cached = searchCache.get(query);
         if (cached) {
           setSearchResults(cached);
@@ -81,15 +69,12 @@ export function AppShell({ children }: { children: ReactNode }) {
           return;
         }
 
-        // 2. Busca Sugestões (Grátis)
         const suggestList = await getYouTubeSuggestions(query);
         setSuggestions(suggestList);
 
-        // 3. Pesquisa Pesada (YT API)
         const results = await searchYouTube(query, apiKey);
         const limited = results.slice(0, 10);
 
-        // Salva no cache
         searchCache.set(query, limited);
 
         setSearchResults(limited);
@@ -103,7 +88,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           setIsSearching(false);
         }
       }
-    }, 900); // 900ms para evitar chamadas acidentais
+    }, 900);
 
     return () => {
       window.clearTimeout(timer);
@@ -147,28 +132,15 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="app-container">
       <header className={`glass ${isMobile ? "mobile-header" : "app-topbar"}`}>
         {isMobile ? (
-          <>
-            <div className="mobile-header-spacer" />
-
+          <div className="mobile-header-brand">
+            <Logo className="logo-mobile" />
             <span className="mobile-brand-title">Norti Play</span>
-
-            <button
-              className="menu-toggle-btn"
-              onClick={() => setIsSidebarOpen(true)}
-              aria-label="Abrir menu"
-            >
-              <Menu size={24} />
-            </button>
-          </>
+          </div>
         ) : (
           <>
             <div className="app-brand">
               <div className="logo-slot">
-                <img
-                  src="https://i.imgur.com/cSUG1IX.png"
-                  alt="Logo Norti Play"
-                  className="brand-logo"
-                />
+                <Logo className="brand-logo-svg" />
               </div>
 
               <div className="brand-copy">
@@ -210,7 +182,6 @@ export function AppShell({ children }: { children: ReactNode }) {
                     <div className="search-dropdown-empty">Buscando...</div>
                   ) : (
                     <>
-                      {/* 1. Lista de Sugestões (Sempre aparece se houver) */}
                       {suggestions.length > 0 && (
                         <div className="search-suggestions-list">
                           <div className="suggestion-header">Sugestões:</div>
@@ -218,10 +189,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                             <button
                               key={suggestion}
                               className="suggestion-item"
-                              onClick={() => {
-                                setSearchQuery(suggestion);
-                                // O useEffect disparará a busca automaticamente pelo novo query
-                              }}
+                              onClick={() => setSearchQuery(suggestion)}
                             >
                               <Search size={14} /> {suggestion}
                             </button>
@@ -229,7 +197,6 @@ export function AppShell({ children }: { children: ReactNode }) {
                         </div>
                       )}
 
-                      {/* 2. Resultados da Busca (Sempre tenta mostrar, se houver) */}
                       {searchResults.length > 0 ? (
                         searchResults.map((result) => (
                           <div key={result.id} className="search-result-item">
@@ -275,26 +242,46 @@ export function AppShell({ children }: { children: ReactNode }) {
         )}
       </header>
 
-      {isSidebarOpen && (
-        <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)} />
-      )}
-
       <div className="app-body">
-        <div className={`sidebar-wrapper ${isSidebarOpen ? "mobile-open" : ""}`}>
-          <button
-            className="menu-close-btn"
-            onClick={() => setIsSidebarOpen(false)}
-            aria-label="Fechar menu"
-          >
-            <X size={24} />
-          </button>
-          <Sidebar onNavigate={() => setIsSidebarOpen(false)} />
-        </div>
+        {!isMobile && (
+          <div className="sidebar-wrapper">
+            <Sidebar />
+          </div>
+        )}
 
         <main className="main-content">
           <div className="main-wrapper">{children}</div>
         </main>
       </div>
+
+      {/* Footer Mobile com links do TanStack Router */}
+      {isMobile && (
+        <nav className="mobile-bottom-nav glass">
+          <Link
+            to="/"
+            className={`bottom-nav-item ${pathname === "/" ? "active" : ""}`}
+          >
+            <Library size={20} />
+            <span>Biblioteca</span>
+          </Link>
+
+          <Link
+            to="/search"
+            className={`bottom-nav-item ${pathname === "/search" ? "active" : ""}`}
+          >
+            <Search size={20} />
+            <span>Buscar</span>
+          </Link>
+
+          <Link
+            to="/settings"
+            className={`bottom-nav-item ${pathname === "/settings" ? "active" : ""}`}
+          >
+            <Settings size={20} />
+            <span>Ajustes</span>
+          </Link>
+        </nav>
+      )}
 
       <Toaster theme="dark" position="top-right" />
     </div>
