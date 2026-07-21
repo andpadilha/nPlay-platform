@@ -112,6 +112,21 @@ function PlayerInner() {
   }, [track?.id]);
 
 
+  useEffect(() => {
+  if (!track || !("mediaSession" in navigator)) return;
+
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: track.title,
+    artist: track.author,
+    artwork: [
+      {
+        src: track.thumbnail,
+        sizes: "512x512",
+        type: "image/jpeg",
+      },
+    ],
+  });
+}, [track]);
 
   // refs to avoid stale closures inside YT event callbacks
   const repeatRef = useRef(repeat);
@@ -195,6 +210,29 @@ function PlayerInner() {
       /* noop */
     }
   }, [volume, muted]);
+
+
+  useEffect(() => {
+  if (!("mediaSession" in navigator)) return;
+
+  navigator.mediaSession.setActionHandler("play", () => {
+    togglePlay();
+  });
+
+  navigator.mediaSession.setActionHandler("pause", () => {
+    togglePlay();
+  });
+
+  navigator.mediaSession.setActionHandler("nexttrack", () => {
+    autoPlayRef.current = true;
+    next();
+  });
+
+  navigator.mediaSession.setActionHandler("previoustrack", () => {
+    autoPlayRef.current = true;
+    prev();
+  });
+}, [togglePlay, next, prev]);
 
   
   useEffect(() => {
@@ -496,7 +534,7 @@ function PlayerBar(p: any) {
             <IconBtn disabled={!hasTrack} onClick={p.onShuffle} active={p.shuffle} className="hide-on-mini">
               <Shuffle size={18} />
             </IconBtn>
-            <IconBtn disabled={!hasTrack} onClick={p.onPrev} className="hide-on-mini">
+            <IconBtn disabled={!hasTrack} onClick={p.onPrev} >
               <SkipBack size={20} />
             </IconBtn>
 
@@ -511,25 +549,25 @@ function PlayerBar(p: any) {
             <IconBtn disabled={!hasTrack} onClick={p.onNext}>
               <SkipForward size={20} />
             </IconBtn>
-            <IconBtn disabled={!hasTrack} onClick={p.onRepeat} active={p.repeat !== "off"} className="hide-on-mini">
+            <IconBtn disabled={!hasTrack} onClick={p.onRepeat} active={p.repeat !== "on"} >
               {p.repeat === "one" ? <Repeat1 size={18} /> : <Repeat size={18} />}
             </IconBtn>
           </div>
         </div>
 
         <div className="controls-right" style={{ pointerEvents: hasTrack ? "auto" : "none" }}>
-          <div className="utility-buttons-wrapper" style={{ display: "flex", gap: 4 }}>
+          <div className="utility-buttons-wrapper" style={{ display: "flex", gap: 12 }}>
             <IconBtn disabled={!hasTrack} onClick={p.onToggleQueue} active={p.showQueue}>
-              <ListMusic size={18} />
+              <ListMusic size={24} />
             </IconBtn>
-            <IconBtn disabled={!hasTrack} onClick={p.onPip} active={p.pipActive} className="hide-on-mobile-fs">
-              <PictureInPicture2 size={18} />
+            <IconBtn disabled={!hasTrack} onClick={p.onPip} active={p.pipActive} >
+              <PictureInPicture2 size={26} />
             </IconBtn>
           </div>
 
           <div className="volume-container-box" style={{ display: "flex", alignItems: "center", gap: 4 }}>
             <IconBtn disabled={!hasTrack} onClick={p.onMute}>
-              {p.muted || p.volume === 0 ? <VolumeX size={18} /> : <Volume2 size={18} />}
+              {p.muted || p.volume === 0 ? <VolumeX size={18} /> : <Volume2 size={24} />}
             </IconBtn>
             <input
               type="range"

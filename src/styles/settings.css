@@ -265,3 +265,52 @@ kbd {
   min-width: 32px;
   text-align: center;
 }
+
+
+/* ==========================================
+   CSS MOBILE / RESPONSIVO (telas <= 768px)
+   ========================================== */
+@media (max-width: 768px) {
+  /* Reduz ligeiramente o padding interno do card principal */
+  .settings-card {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  /* Faz o grid de temas empilhar verticalmente */
+  .theme-picker-shell {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Ajusta o card de preview para ocupar menos altura em telas pequenas */
+  .theme-preview-card {
+    min-height: 180px;
+    padding: 16px;
+  }
+
+  .theme-preview-content {
+    max-width: 100%;
+  }
+
+  /* Permite que linhas com botões ou inputs empilhem se não couberem */
+  .settings-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .input-with-action {
+    min-width: 100%;
+    width: 100%;
+  }
+
+  /* Garante que o pill do tema customizado ocupe toda a largura disponível */
+  .theme-custom-pill {
+    max-width: 100%;
+  }
+
+  /* Garante que a lista de atalhos se adapte melhor em telas muito pequenas */
+  .shortcut-list {
+    grid-template-columns: 1fr;
+  }
+}
