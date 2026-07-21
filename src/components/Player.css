@@ -233,7 +233,7 @@
 
 .player-footer {
     position: fixed;
-    bottom: 60px;
+    bottom: 0;
     left: 0;
     right: 0;
     z-index: 40;
@@ -493,7 +493,7 @@
         max-height: 100vh;
         border-radius: 0;
         /* Remove bordas arredondadas nos cantos da tela */
-        z-index: 250;
+        z-index: 9999;
         /* Fica acima dos 200 do player fullscreen */
 
         /* Backdrop blur mantendo o padrão glass da sua aplicação */
@@ -551,6 +551,7 @@
 @media (max-width: 768px) {
     .player-footer {
         padding: 0;
+        bottom: 60px;
     }
 
     .player-bar-container {
@@ -605,9 +606,9 @@
         padding: 1.5rem;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-start;
         background: var(--background-secondary-60) !important;
-        z-index: 200;
+        z-index: 9900;
     }
 
     .fullscreen-header {
